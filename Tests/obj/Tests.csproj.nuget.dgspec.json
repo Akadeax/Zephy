@@ -26,7 +26,11 @@
         },
         "frameworks": {
           "netcoreapp3.1": {
-            "projectReferences": {}
+            "projectReferences": {
+              "C:\\dev\\C#\\Zephy\\Server\\Server.csproj": {
+                "projectPath": "C:\\dev\\C#\\Zephy\\Server\\Server.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
@@ -41,6 +45,10 @@
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
               "version": "[16.4.0, )"
+            },
+            "MongoDB.Bson": {
+              "target": "Package",
+              "version": "[2.10.3, )"
             },
             "NUnit3TestAdapter": {
               "target": "Package",

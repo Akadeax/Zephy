@@ -1,4 +1,6 @@
 using NUnit.Framework;
+using Server;
+using Server.models;
 
 namespace Tests
 {
@@ -10,8 +12,10 @@ namespace Tests
         }
 
         [Test]
-        public void Test1()
+        public void EmployeePopulatedRolesTest()
         {
+            
+
             Assert.Pass();
         }
     }

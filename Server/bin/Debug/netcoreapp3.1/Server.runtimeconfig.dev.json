@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\TheAlphaKarp\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\TheAlphaKarp\\.nuget\\packages"
+    ]
+  }
+}
