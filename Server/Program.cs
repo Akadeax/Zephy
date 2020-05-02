@@ -28,7 +28,7 @@ namespace Server
                 List<EmployeeModel> employees = db.LoadEmployees<EmployeeModel>();
 
                 // This will load 1 specific employee and replace the roles reference ids with the actual data (population)
-                EmployeePopulated populatedEmployee = db.LoadPopulatedEmployeeById<EmployeePopulated>(new ObjectId("5ead3320dde2a721846c4104"));
+                EmployeePopulated populatedEmployee = db.LoadPopulatedEmployeeById<EmployeePopulated>(new ObjectId("5eadc483cfa169556429f2c6"));
             }
             catch (InvalidIDException e) {
                 Console.WriteLine(e.Message);

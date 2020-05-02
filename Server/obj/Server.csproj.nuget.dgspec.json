@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\dev\\C#\\Zephy\\Server\\Server.csproj": {}
+    "D:\\dev\\Programming\\CS\\VanillaCS\\Zephy\\Server\\Server.csproj": {}
   },
   "projects": {
-    "C:\\dev\\C#\\Zephy\\Server\\Server.csproj": {
+    "D:\\dev\\Programming\\CS\\VanillaCS\\Zephy\\Server\\Server.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\dev\\C#\\Zephy\\Server\\Server.csproj",
+        "projectUniqueName": "D:\\dev\\Programming\\CS\\VanillaCS\\Zephy\\Server\\Server.csproj",
         "projectName": "Server",
-        "projectPath": "C:\\dev\\C#\\Zephy\\Server\\Server.csproj",
-        "packagesPath": "C:\\Users\\TheAlphaKarp\\.nuget\\packages\\",
-        "outputPath": "C:\\dev\\C#\\Zephy\\Server\\obj\\",
+        "projectPath": "D:\\dev\\Programming\\CS\\VanillaCS\\Zephy\\Server\\Server.csproj",
+        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+        "outputPath": "D:\\dev\\Programming\\CS\\VanillaCS\\Zephy\\Server\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\TheAlphaKarp\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -62,7 +62,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

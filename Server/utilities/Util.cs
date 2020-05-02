@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Server.utilities
 {
-    class Util
+    static class Util
     {
-        public static string ConvertListToString<T>(List<T> list)
+        public static string ToString<T>(this List<T> list)
         {
             return String.Join(",", list.ToArray());
         }

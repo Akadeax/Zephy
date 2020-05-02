@@ -25,27 +25,9 @@ namespace Server.database.seeders
                 em.InsertEmployee(new EmployeeModel
                 {
                     roles = GetRandomRoles(),
-                    firstName = Faker.Name.First(),
-                    lastName = Faker.Name.Last(),
-                    gender = 'F',
-                    address = new Address
-                    {
-                        streetAddress = Faker.Address.StreetAddress(),
-                        city = Faker.Address.City(),
-                        province = Faker.Address.UsState(),
-                        postalCode = Faker.Address.UkPostCode(),
-                    },
-                    contact = new Contact
-                    {
-                        homePhone = Faker.Phone.Number(),
-                        cellPhone = Faker.Phone.Number(),
-                        email = Faker.Internet.Email(),
-                        socialInsuranceNumber = Faker.Identification.UsPassportNumber(),
-                    },
-                    birthDate = Faker.Identification.DateOfBirth(),
-                    maritalStatus = "single",
+                    name = Faker.Name.FullName()
                 }
-                ); ;
+                );
             }
         }
 
