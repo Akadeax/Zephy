@@ -7,8 +7,11 @@ namespace Server
 {
     class Program
     {
+        static ServerSocket serverSocket = new ServerSocket();
+
         static void Main(string[] args)
         {
+            #region seeding
             // Will only seed empty collections in the Zephy database
             SeederHandler s = new SeederHandler();
             s.Start(entrees:100);
@@ -17,22 +20,18 @@ namespace Server
 
             // This will get a list of all employees in the system
             List<Employee> employees = employeeCrud.LoadEmployees();
+            #endregion
 
-            //RoleCache roleCache = new RoleCache("Zephy");
+            #region Socket
+            serverSocket.Bind(port:6556);
+            serverSocket.Listen(backlog:500);
+            serverSocket.Accept();
 
-            List<PopulatedEmployee> pop = new List<PopulatedEmployee>();
-            foreach(Employee emp in employees)
-            {
-                pop.Add(employeeCrud.Populate(emp));
-            }
+            Console.WriteLine("Listening...");
+            while (true)
+                Console.ReadKey();
 
-            foreach(PopulatedEmployee emp in pop)
-            {
-                Console.WriteLine(emp.name);
-            }
-
-            Console.WriteLine("Done");
-            Console.ReadKey(true);
+            #endregion
         }
     }
 }
