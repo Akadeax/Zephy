@@ -1,9 +1,7 @@
 ﻿using System;
 using MongoDB.Bson;
-using Server.models;
 using System.Collections.Generic;
 using Server.database.seeders;
-using Server.exceptions;
 
 namespace Server
 {
@@ -11,34 +9,30 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            /*
-             * NOTE: I will have to rewrite most of the CRUD systems and refacter the models a bit,
-             * so just ignore the "baka" code parts like that useless inheritance from MongoCrud. Sheers
-             */
-
             // Will only seed empty collections in the Zephy database
-            Seeder s = new Seeder();
-            s.Start(entrees:10);
+            SeederHandler s = new SeederHandler();
+            s.Start(entrees:100);
 
-            try
+            EmployeeCrud employeeCrud = new EmployeeCrud("Zephy");
+
+            // This will get a list of all employees in the system
+            List<Employee> employees = employeeCrud.LoadEmployees();
+
+            //RoleCache roleCache = new RoleCache("Zephy");
+
+            List<PopulatedEmployee> pop = new List<PopulatedEmployee>();
+            foreach(Employee emp in employees)
             {
-                EmployeeCrud db = new EmployeeCrud("Zephy");
-
-                // This will get a list of all employees in the system
-                List<EmployeeModel> employees = db.LoadEmployees<EmployeeModel>();
-
-                // This will load 1 specific employee and replace the roles reference ids with the actual data (population)
-                EmployeePopulated populatedEmployee = db.LoadPopulatedEmployeeById<EmployeePopulated>(new ObjectId("5eadc483cfa169556429f2c6"));
+                pop.Add(employeeCrud.Populate(emp));
             }
-            catch (InvalidIDException e) {
-                Console.WriteLine(e.Message);
-            }
-            finally
+
+            foreach(PopulatedEmployee emp in pop)
             {
-                // Breakpoint here to check data
-                Console.WriteLine("Done");
-                Console.ReadLine();
+                Console.WriteLine(emp.name);
             }
+
+            Console.WriteLine("Done");
+            Console.ReadKey(true);
         }
-    } 
+    }
 }

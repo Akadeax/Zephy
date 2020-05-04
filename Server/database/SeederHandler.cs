@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Server.database.seeders
 {
-    class Seeder
+    class SeederHandler
     {
         public EmployeeSeeder es;
         public RoleSeeder rs;
 
-        public Seeder()
+        public SeederHandler()
         {
-            es = new EmployeeSeeder();
             rs = new RoleSeeder();
+            es = new EmployeeSeeder();
         }
 
         public void Start(int entrees)

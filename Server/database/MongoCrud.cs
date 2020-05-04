@@ -1,45 +1,41 @@
-﻿using MongoDB.Bson;
+﻿using System;
+using MongoDB.Bson;
 using MongoDB.Driver;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Server
 {
-    public class MongoCRUD
+    public abstract class MongoCRUD<T>
     {
         protected IMongoDatabase db;
+        protected IMongoCollection<T> collection;
+        private string database;
 
-        public MongoCRUD(string database)
+        public MongoCRUD(string database, string table)
         {
             var client = new MongoClient();
             db = client.GetDatabase(database);
+            collection = db.GetCollection<T>(table);
         }
 
-        public void InsertRecord<T>(string table, T record)
+        public void InsertRecord(T record)
         {
-            var collection = db.GetCollection<T>(table);
             collection.InsertOne(record);
         }
 
-        public List<T> LoadRecord<T>(string table)
+        public List<T> LoadRecords()
         {
-            var collection = db.GetCollection<T>(table);
             return collection.Find(new BsonDocument()).ToList();
         }
 
-        public T LoadRecordById<T>(string table, ObjectId id)
+        public T LoadRecordById(ObjectId id)
         {
-            var collection = db.GetCollection<T>(table);
             var filter = Builders<T>.Filter.Eq("_id", id);
-
             return collection.Find(filter).First();
         }
 
-        public void UpsertRecord<T>(string table, ObjectId id, T record)
+        public void UpsertRecord(ObjectId id, T record)
         {
-            var collection = db.GetCollection<T>(table);
-
             collection.ReplaceOne(
                 new BsonDocument("_id", id),
                 record,
@@ -47,18 +43,18 @@ namespace Server
             );
         }
 
-        public void DeleteRecord<T>(string table, ObjectId id)
+        public void DeleteRecord(ObjectId id)
         {
-            var collection = db.GetCollection<T>(table);
             var filter = Builders<T>.Filter.Eq("_id", id);
-
             collection.DeleteOne(filter);
         }
 
-        public long GetDocumentCount<T>(string table)
+        public long DocumentCount
         {
-            var collection = db.GetCollection<T>(table);
-            return collection.EstimatedDocumentCount();
+            get
+            {
+                return collection.EstimatedDocumentCount();
+            }
         }
 
         public void CloseConnection()

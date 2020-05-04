@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Server.models
+namespace Server
 {
-    public class RoleModel
+    public class Role
     {
         public ObjectId _id;
         public string name;
