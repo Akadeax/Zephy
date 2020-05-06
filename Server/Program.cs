@@ -14,7 +14,7 @@ namespace Server
 
         static void Main(string[] args)
         {
-            #region seeding
+            #region Seeding
             // Will only seed empty collections in the Zephy database
             SeederHandler s = new SeederHandler();
             s.Start(entrees:100);
@@ -29,11 +29,12 @@ namespace Server
             // Start the actual TCP Server
             serverSocket.Bind(port:6556);
             serverSocket.Listen(backlog:500);
+            // Start client accept loop
             serverSocket.Accept();
 
             Console.WriteLine("Listening...");
 
-            // Start the UDP Broadcast Receiver that answers Clients
+            // Start the UDP Broadcast Receiver that answers Clients search for the local IP
             BroadcastReceiver receiver = new BroadcastReceiver(6556);
             receiver.StartReceive();
 

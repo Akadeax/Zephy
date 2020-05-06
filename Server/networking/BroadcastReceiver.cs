@@ -53,6 +53,8 @@ namespace Server
 
             Console.WriteLine($"received IdentifyPacket from Client");
 
+            // Send Packet with identifier "SERVER" back to client
+            //to indicate that it was the server that sent data back
             IdentifyPacket sendPacket = new IdentifyPacket("SERVER");
             await client.Client.SendToAsync(sendPacket.Buffer, SocketFlags.None, new IPEndPoint(res.RemoteEndPoint.Address, res.RemoteEndPoint.Port));
             Console.WriteLine($"sending IdentifyPacket from Server back to sender.");

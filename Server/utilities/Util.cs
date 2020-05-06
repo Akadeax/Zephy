@@ -7,6 +7,9 @@ namespace Server.utilities
 {
     static class Util
     {
+        /// <summary>
+        /// Joins Strings in list with ',' in between
+        /// </summary>
         public static string ToString<T>(this List<T> list)
         {
             return String.Join(",", list.ToArray());
