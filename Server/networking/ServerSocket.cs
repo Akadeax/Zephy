@@ -33,7 +33,7 @@ namespace Server
         private void OnAccepted(IAsyncResult result)
         {
             Socket clientSocket = socket.EndAccept(result);
-            BeginNewBufferReceive(clientSocket);
+            BeginReceive(clientSocket);
             Accept();
         }
 
@@ -47,12 +47,13 @@ namespace Server
             Array.Copy(buffer, packet, packet.Length);
 
             // Handle the packet
-            PacketHandler.Handle(packet, clientSocket);
+            int res = PacketHandler.Handle(packet, clientSocket);
+            if (res == PacketHandler.SHUTDOWN) return;
 
-            BeginNewBufferReceive(clientSocket);
+            BeginReceive(clientSocket);
         }
 
-        private void BeginNewBufferReceive(Socket clientSocket)
+        private void BeginReceive(Socket clientSocket)
         {
             buffer = new byte[1024];
             clientSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, OnDataReceived, clientSocket);

@@ -2,6 +2,9 @@
 using MongoDB.Bson;
 using System.Collections.Generic;
 using Server.database.seeders;
+using System.Net.Sockets;
+using System.Threading.Tasks;
+using System.Net;
 
 namespace Server
 {
@@ -23,14 +26,21 @@ namespace Server
             #endregion
 
             #region Socket
+            // Start the actual TCP Server
             serverSocket.Bind(port:6556);
             serverSocket.Listen(backlog:500);
             serverSocket.Accept();
 
             Console.WriteLine("Listening...");
-            while (true)
-                Console.ReadKey();
 
+            // Start the UDP Broadcast Receiver that answers Clients
+            BroadcastReceiver receiver = new BroadcastReceiver(6556);
+            receiver.StartReceive();
+
+            while (true)
+            {
+                Console.ReadKey();
+            }
             #endregion
         }
     }

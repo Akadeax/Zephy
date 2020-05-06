@@ -4,20 +4,28 @@ using System.Text;
 
 namespace Server
 {
-    public abstract class PacketStructure
+    public class Packet
     {
         private byte[] buffer;
 
-        public PacketStructure(ushort len, ushort type)
+        protected Packet(ushort len, ushort type)
         {
             buffer = new byte[len];
             WriteUShort(len, 0);
             WriteUShort(type, 2);
         }
 
-        public PacketStructure(byte[] packet)
+        protected Packet(byte[] packet)
         {
             buffer = packet;
+        }
+
+        public ushort PacketType
+        {
+            get
+            {
+                return ReadUShort(2);
+            }
         }
 
         public ushort ReadUShort(int offset)
@@ -46,6 +54,15 @@ namespace Server
             Array.Copy(valueBuffer, 0, buffer, offset, valueBuffer.Length);
         }
 
+
         public byte[] Buffer { get => buffer; }
+
+        // allows implicit casting from packet to byte[] to make sending easier
+        public static implicit operator byte[](Packet packet) => packet.buffer;
+
+        public static ushort GetPacketType(byte[] buffer)
+        {
+            return new Packet(buffer).PacketType;
+        }
     }
 }
