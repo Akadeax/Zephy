@@ -8,30 +8,30 @@ namespace Server
     {
         public const int TYPE = 2000;
 
-        private string email;
+        private string username;
         private string password;
 
-        // Send structure: (ushort)LEN(ushort)TYPE(string)EMAIL|(string)PASSWORD
-        public LoginPacket(string email, string password)
-            : base(Convert.ToUInt16(4 + email.Length + password.Length + 1), TYPE)
+        // Send structure: (ushort)LEN(ushort)TYPE(string)USERNAME|(string)PASSWORD
+        public LoginPacket(string username, string password)
+            : base(Convert.ToUInt16(4 + username.Length + password.Length + 1), TYPE)
         {
-            this.email = email;
+            this.username = username;
             this.password = password;
         }
 
         public LoginPacket(byte[] packet)
             : base(packet) { }
 
-        public string ReadEmailPassword()
+        public string ReadUsernamePassword()
         {
             return ReadString(4, Buffer.Length - 4);
         }
 
-        public string Email
+        public string Username
         {
             get
             {
-                return ReadEmailPassword().Split('|')[0];
+                return ReadUsernamePassword().Split('|')[0];
             }
         }
 
@@ -39,7 +39,7 @@ namespace Server
         {
             get
             {
-                return ReadEmailPassword().Split('|')[1];
+                return ReadUsernamePassword().Split('|')[1];
             }
         }
     }

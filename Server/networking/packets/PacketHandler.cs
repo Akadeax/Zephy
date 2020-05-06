@@ -34,7 +34,7 @@ namespace Server
 
                 case LoginPacket.TYPE:
                     LoginPacket loginPacket = new LoginPacket(packet);
-                    Console.WriteLine($"Received login attempt with {loginPacket.Email} and password {loginPacket.Password}.");
+                    Console.WriteLine($"Received login attempt with {loginPacket.Username} and password {loginPacket.Password}.");
                     break;
             }
 
