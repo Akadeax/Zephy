@@ -40,7 +40,7 @@ namespace Server
 
             while (true)
             {
-                Console.ReadKey();
+                Console.ReadLine();
             }
             #endregion
         }

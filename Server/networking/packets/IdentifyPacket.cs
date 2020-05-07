@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Server
+namespace Packets.General
 {
     class IdentifyPacket : Packet
     {
-        public const int TYPE = 1100;
+        public const int TYPE = 1000;
 
         string src = "";
 
         public IdentifyPacket(string src)
-            : base(Convert.ToUInt16(4 + src.Length), TYPE)
+            : base(Convert.ToUInt16(BASE_PACKET_SIZE + src.Length), TYPE)
         {
             Src = src;
         }
@@ -23,12 +23,12 @@ namespace Server
         {
             get 
             {
-                return ReadString(4, Buffer.Length - 4);
+                return ReadString(BASE_PACKET_SIZE, Buffer.Length - BASE_PACKET_SIZE);
             }
-            set
+            private set
             {
                 src = value;
-                WriteString(value, 4);
+                WriteString(value, BASE_PACKET_SIZE);
             }
         }
     }

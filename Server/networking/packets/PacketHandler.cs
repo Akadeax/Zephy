@@ -4,7 +4,13 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace Server
+using Packets.General;
+using Packets.Auth;
+using Packets.Message;
+using Packets.User;
+using Packets.Channel;
+
+namespace Packets
 {
     public static class PacketHandler
     {
@@ -27,11 +33,6 @@ namespace Server
 
             switch (packetType)
             {
-                case MessagePacket.TYPE:
-                    MessagePacket msgPacket = new MessagePacket(packet);
-                    Console.WriteLine($"Received Message Packet: {msgPacket.Message}");
-                    break;
-
                 case LoginPacket.TYPE:
                     LoginPacket loginPacket = new LoginPacket(packet);
                     Console.WriteLine($"Received login attempt with {loginPacket.Username} and password {loginPacket.Password}.");

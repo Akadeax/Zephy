@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Server
+namespace Packets.Auth
 {
     class LoginPacket : Packet
     {
@@ -13,7 +13,7 @@ namespace Server
 
         // Send structure: (ushort)LEN(ushort)TYPE(string)USERNAME|(string)PASSWORD
         public LoginPacket(string username, string password)
-            : base(Convert.ToUInt16(4 + username.Length + password.Length + 1), TYPE)
+            : base(Convert.ToUInt16(BASE_PACKET_SIZE + username.Length + password.Length + 1), TYPE)
         {
             this.username = username;
             this.password = password;
@@ -24,7 +24,7 @@ namespace Server
 
         public string ReadUsernamePassword()
         {
-            return ReadString(4, Buffer.Length - 4);
+            return ReadString(BASE_PACKET_SIZE, Buffer.Length - BASE_PACKET_SIZE);
         }
 
         public string Username
