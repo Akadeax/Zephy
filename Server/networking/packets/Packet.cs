@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Server
+namespace Packets
 {
     public class Packet
     {
+        protected const byte BASE_PACKET_SIZE = 4;
+
         private byte[] buffer;
+        public byte[] Buffer { get => buffer; }
 
         protected Packet(ushort len, ushort type)
         {
@@ -26,6 +29,10 @@ namespace Server
             {
                 return ReadUShort(2);
             }
+        }
+        public static ushort GetPacketType(byte[] buffer)
+        {
+            return new Packet(buffer).PacketType;
         }
 
         public ushort ReadUShort(int offset)
@@ -52,17 +59,6 @@ namespace Server
             valueBuffer = Encoding.UTF8.GetBytes(value);
 
             Array.Copy(valueBuffer, 0, buffer, offset, valueBuffer.Length);
-        }
-
-
-        public byte[] Buffer { get => buffer; }
-
-        // allows implicit casting from packet to byte[] to make sending easier
-        public static implicit operator byte[](Packet packet) => packet.buffer;
-
-        public static ushort GetPacketType(byte[] buffer)
-        {
-            return new Packet(buffer).PacketType;
         }
     }
 }
