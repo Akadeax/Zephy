@@ -6,5 +6,6 @@ namespace Packets.Message
 {
     class UpdateMessagePacket
     {
+        public const int TYPE = 2304;
     }
 }

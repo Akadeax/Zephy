@@ -6,5 +6,6 @@ namespace Packets.Channel
 {
     class DeleteChannelPacket
     {
+        public const int TYPE = 2201;
     }
 }

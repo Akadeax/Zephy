@@ -6,5 +6,6 @@ namespace Packets.Message
 {
     class DeleteMessagePacket
     {
+        public const int TYPE = 2301;
     }
 }

@@ -6,5 +6,6 @@ namespace Packets.Channel
 {
     class ReadChannelPacket
     {
+        public const int TYPE = 2202;
     }
 }
