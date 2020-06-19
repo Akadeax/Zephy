@@ -2,9 +2,9 @@
 using MongoDB.Bson;
 using System.Collections.Generic;
 
-namespace Server
+namespace Server.database.Roles
 {
-    public class RoleCrud : MongoCRUD<Role>
+    public class RoleCrud : MongoCrud<Role>
     {
         public const string COLLECTION_NAME = "Roles";
 
@@ -14,17 +14,17 @@ namespace Server
 
         public void InsertRole(Role record)
         {
-            InsertRecord(record);
+            CreateRecord(record);
         }
 
         public List<Role> LoadRoles()
         {
-            return LoadRecords();
+            return ReadRecords();
         }
 
         public Role LoadRoleById(ObjectId id)
         {
-            return LoadRecordById(id);
+            return ReadRecordById(id);
         }
     }
 }

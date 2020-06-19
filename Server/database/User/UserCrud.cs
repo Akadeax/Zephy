@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using Server.database.Roles;
 using System;
 using System.Collections.Generic;
 
@@ -8,40 +9,40 @@ namespace Server
     /// <summary>
     /// This class is derived from the basic MongoCRUD and will Create Read Update Delete only Employee records
     /// </summary>
-    public class EmployeeCrud : MongoCRUD<Employee>
+    public class UserCrud : MongoCrud<User>
     {
-        public const string COLLECTION_NAME = "Employees";
+        public const string COLLECTION_NAME = "Users";
         private RoleCache roleCache;
 
-        public EmployeeCrud(string database)
+        public UserCrud(string database)
             : base(database, COLLECTION_NAME)
         {
             roleCache = new RoleCache(database);
         }
 
-        public void InsertEmployee(Employee record) 
+        public void InsertEmployee(User record) 
         {
-            InsertRecord(record);
+            CreateRecord(record);
         }
 
-        public List<Employee> LoadEmployees()
+        public List<User> LoadEmployees()
         {
-            return LoadRecords();
+            return ReadRecords();
         }
 
-        public PopulatedEmployee Populate(Employee employee)
+        public PopulatedUser Populate(User user)
         {
             List<Role> roles = new List<Role>();
-            foreach(ObjectId id in employee.roles)
+            foreach(ObjectId id in user.roles)
             {
                 roles.Add(roleCache.GetRole(id));
             }
 
-            return new PopulatedEmployee
+            return new PopulatedUser
             {
-                name = employee.name,
+                name = user.name,
                 roles = roles,
-                _id = employee._id
+                _id = user._id
             };
         }
 
@@ -50,32 +51,32 @@ namespace Server
         /// </summary>
         /// <param name="id">the id to load the employee by</param>
         /// <returns>the Employee that was loaded by ID by this method</returns>
-        public Employee LoadEmployee(ObjectId id)
+        public User LoadUser(ObjectId id)
         {
-            var filter = Builders<Employee>.Filter.Eq("_id", id);
+            var filter = Builders<User>.Filter.Eq("_id", id);
             return collection.Find(filter).First();
         }
 
 
 
         [Obsolete("Not optimized, use methods that adopt the caching approach")]
-        public PopulatedEmployee LoadPopulatedEmployee(ObjectId id)
+        public PopulatedUser LoadPopulatedUser(ObjectId id)
         {
             FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.Eq("_id", id);
             return collection
                 .Aggregate()
                 .Lookup(RoleCrud.COLLECTION_NAME, "roles", "_id", "roles")
-                .Match(filter).As<PopulatedEmployee>()
+                .Match(filter).As<PopulatedUser>()
                 .First();
         }
 
         [Obsolete("Not optimized, use methods that adopt the caching approach")]
-        public List<PopulatedEmployee> LoadPopulatedEmployees()
+        public List<PopulatedUser> LoadPopulatedEmployees()
         {
             return collection
                 .Aggregate()
                 .Lookup(RoleCrud.COLLECTION_NAME, "roles", "_id", "roles")
-                .As<PopulatedEmployee>()
+                .As<PopulatedUser>()
                 .ToList();
         }
     }

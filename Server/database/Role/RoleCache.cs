@@ -2,7 +2,7 @@
 using MongoDB.Bson;
 using System.Collections.Generic;
 
-namespace Server
+namespace Server.database.Roles
 {
     class RoleCache
     {

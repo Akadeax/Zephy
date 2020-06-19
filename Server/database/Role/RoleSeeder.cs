@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Server.database.seeders
+namespace Server.database.Roles
 {
     class RoleSeeder
     {

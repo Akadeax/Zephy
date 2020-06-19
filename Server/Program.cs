@@ -19,10 +19,10 @@ namespace Server
             SeederHandler s = new SeederHandler();
             s.Start(entrees:100);
 
-            EmployeeCrud employeeCrud = new EmployeeCrud("Zephy");
+            UserCrud employeeCrud = new UserCrud("Zephy");
 
             // This will get a list of all employees in the system
-            List<Employee> employees = employeeCrud.LoadEmployees();
+            List<User> employees = employeeCrud.LoadEmployees();
             #endregion
 
             #region Socket

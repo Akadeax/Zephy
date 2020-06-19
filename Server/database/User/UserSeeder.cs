@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using MongoDB.Bson;
+using Server.database.Roles;
 
 namespace Server
 {
-    class EmployeeSeeder
+    class UserSeeder
     {
-        private EmployeeCrud employeeCrud;
+        private UserCrud employeeCrud;
         private RoleCache roleCache;
 
-        public EmployeeSeeder()
+        public UserSeeder()
         {
-            employeeCrud = new EmployeeCrud("Zephy");
+            employeeCrud = new UserCrud("Zephy");
             roleCache = new RoleCache("Zephy");
         }
 
@@ -21,7 +22,7 @@ namespace Server
 
             for (var i = 0; i < amountOfEmployees; i++)
             {
-                employeeCrud.InsertEmployee(new Employee
+                employeeCrud.InsertEmployee(new User
                 {
                     roles = GetRandomRoles(),
                     name = Faker.Name.FullName()

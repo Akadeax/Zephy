@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "a25l5nd77eIXWIcmPMW5Eqmb3qflyiNYq3Lt3QnfRck7nBpjLbo4+5Qlahx8YFaN5Z59984UoS3xVcGH23IxLg==",
+  "dgSpecHash": "lUnOZSGRPjLq4v/GDQufukPs/aQCxQMBkQq6R2wFJ532FG+6ZVio1Bj7M3sAE/3k+OOJ0moJ7vNvPR0r+5BvGg==",
   "success": true,
-  "projectFilePath": "C:\\dev\\C#\\Zephy\\Server\\Server.csproj",
+  "projectFilePath": "C:\\dev\\Zephy\\Server\\Server.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\TheAlphaKarp\\.nuget\\packages\\dnsclient\\1.3.1\\dnsclient.1.3.1.nupkg.sha512",
     "C:\\Users\\TheAlphaKarp\\.nuget\\packages\\faker.net\\1.3.77\\faker.net.1.3.77.nupkg.sha512",
@@ -91,7 +91,10 @@
     "C:\\Users\\TheAlphaKarp\\.nuget\\packages\\system.threading\\4.3.0\\system.threading.4.3.0.nupkg.sha512",
     "C:\\Users\\TheAlphaKarp\\.nuget\\packages\\system.threading.tasks\\4.3.0\\system.threading.tasks.4.3.0.nupkg.sha512",
     "C:\\Users\\TheAlphaKarp\\.nuget\\packages\\system.threading.thread\\4.3.0\\system.threading.thread.4.3.0.nupkg.sha512",
-    "C:\\Users\\TheAlphaKarp\\.nuget\\packages\\system.threading.threadpool\\4.3.0\\system.threading.threadpool.4.3.0.nupkg.sha512"
+    "C:\\Users\\TheAlphaKarp\\.nuget\\packages\\system.threading.threadpool\\4.3.0\\system.threading.threadpool.4.3.0.nupkg.sha512",
+    "C:\\Users\\TheAlphaKarp\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.2\\microsoft.aspnetcore.app.ref.3.1.2.nupkg.sha512",
+    "C:\\Users\\TheAlphaKarp\\.nuget\\packages\\microsoft.netcore.app.ref\\3.1.0\\microsoft.netcore.app.ref.3.1.0.nupkg.sha512",
+    "C:\\Users\\TheAlphaKarp\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\3.1.0\\microsoft.windowsdesktop.app.ref.3.1.0.nupkg.sha512"
   ],
   "logs": []
 }
