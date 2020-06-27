@@ -6,6 +6,6 @@ namespace Packets.User
 {
     class UpdateUserPacket
     {
-
+        public const int TYPE = 2102;
     }
 }

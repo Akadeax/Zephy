@@ -11,7 +11,7 @@ namespace Packets.Auth
         private string username;
 
         public LogoutPacket(string username)
-            : base(Convert.ToUInt16(4 + username.Length), TYPE)
+            : base(Convert.ToUInt16(BASE_PACKET_SIZE + username.Length), TYPE)
         {
             this.username = username;
         }

@@ -6,5 +6,6 @@ namespace Packets.Message
 {
     class GetMessagePacket
     {
+        public const int TYPE = 2302;
     }
 }

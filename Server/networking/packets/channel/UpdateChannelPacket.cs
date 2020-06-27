@@ -6,5 +6,6 @@ namespace Packets.Channel
 {
     class UpdateChannelPacket
     {
+        public const int TYPE = 2203;
     }
 }
