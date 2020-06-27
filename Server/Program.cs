@@ -12,12 +12,14 @@ namespace Server
     {
         static ServerSocket serverSocket = new ServerSocket();
 
+        public const int PORT = 6556;
+
         static void Main(string[] args)
         {
             #region Seeding
             // Will only seed empty collections in the Zephy database
             SeederHandler s = new SeederHandler();
-            s.Start(entrees:100);
+            s.Start(entrees: 100);
 
             EmployeeCrud employeeCrud = new EmployeeCrud("Zephy");
 
@@ -27,15 +29,15 @@ namespace Server
 
             #region Socket
             // Start the actual TCP Server
-            serverSocket.Bind(port:6556);
-            serverSocket.Listen(backlog:500);
+            serverSocket.Bind(PORT);
+            serverSocket.Listen(backlog: 500);
             // Start client accept loop
             serverSocket.Accept();
 
             Console.WriteLine("Listening...");
 
-            // Start the UDP Broadcast Receiver that answers Clients search for the local IP
-            BroadcastReceiver receiver = new BroadcastReceiver(6556);
+            // Start the UDP Broadcast Receiver that answers Clients search for the server's local IP
+            BroadcastReceiver receiver = new BroadcastReceiver(PORT);
             receiver.StartReceive();
 
             while (true)

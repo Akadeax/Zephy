@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Packets;
+using System;
 using System.Net;
 using System.Net.Sockets;
 
@@ -34,7 +35,6 @@ namespace Server
         /// <summary>
         /// Callback when a Client to accept is found
         /// </summary>
-        /// <param name="result"></param>
         private void OnAccepted(IAsyncResult result)
         {
             Socket clientSocket = socket.EndAccept(result);
@@ -47,7 +47,6 @@ namespace Server
         /// <summary>
         /// Callback when any client sends any Data
         /// </summary>
-        /// <param name="result"></param>
         private void OnDataReceived(IAsyncResult result)
         {
             Socket clientSocket = (Socket)result.AsyncState;
