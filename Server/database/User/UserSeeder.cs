@@ -8,8 +8,8 @@ namespace Server
 {
     class UserSeeder
     {
-        private UserCrud userCrud;
-        private RoleCrud roleCrud;
+        private readonly UserCrud userCrud;
+        private readonly RoleCrud roleCrud;
 
         public UserSeeder()
         {
@@ -23,7 +23,7 @@ namespace Server
 
             for (var i = 0; i < amountOfEmployees; i++)
             {
-                userCrud.Create(new User
+                userCrud.CreateRecord(new User
                 {
                     roles = GetRandomRoles(),
                     name = Faker.Name.FullName(),
@@ -32,10 +32,10 @@ namespace Server
             }
 
             List<ObjectId> roleList = new List<ObjectId>();
-            Role AdminRole = roleCrud.ReadOne("administrator");
+            Role AdminRole = roleCrud.ReadRecord(x => x.name == "administrator");
             roleList.Add(AdminRole._id);
 
-            userCrud.Create(new User
+            userCrud.CreateRecord(new User
             {
                 roles = roleList,
                 name = "admin",
@@ -47,7 +47,7 @@ namespace Server
         {
             List<ObjectId> randomRoles = new List<ObjectId>();
 
-            List<Role> roles = roleCrud.ReadMany();
+            List<Role> roles = roleCrud.ReadRecords();
 
             Random r = new Random();
 

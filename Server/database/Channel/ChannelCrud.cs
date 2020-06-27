@@ -14,26 +14,6 @@ namespace Server.database.Channels
 
         }
 
-        public void Create(Channel channel)
-        {
-            CreateRecord(channel);
-        }
-
-        public void Update(ObjectId id, Channel channel)
-        {
-            UpdateRecord(id, channel);
-        }
-
-        public void Delete(ObjectId id)
-        {
-            DeleteRecord(id);
-        }
-
-        public Channel ReadOne(ObjectId id)
-        {
-            return ReadRecordById(id);
-        }
-
         public PopulatedChannel ReadOnePopulated(ObjectId id)
         {
             FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.Eq("_id", id);
@@ -42,11 +22,6 @@ namespace Server.database.Channels
                 .Lookup(MessageCrud.COLLECTION_NAME, "channel", "_id", "channel")
                 .Match(filter).As<PopulatedChannel>()
                 .First();
-        }
-
-        public List<Channel> ReadMany()
-        {
-            return ReadRecords();
         }
 
         public List<PopulatedChannel> ReadManyPopulated()

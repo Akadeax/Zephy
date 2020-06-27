@@ -15,26 +15,6 @@ namespace Server
 
         }
 
-        public void Create(User user) 
-        {
-            CreateRecord(user);
-        }
-
-        public void Update(ObjectId id, User user)
-        {
-            UpdateRecord(id, user);
-        }
-
-        public void Delete(ObjectId id)
-        {
-            DeleteRecord(id);
-        }
-
-        public User ReadOne(ObjectId id)
-        {
-            return ReadRecordById(id);
-        }
-
         public User ReadOne(string name)
         {
             if (DocumentCount == 0) return null;
@@ -52,11 +32,6 @@ namespace Server
                 .Lookup(RoleCrud.COLLECTION_NAME, "roles", "_id", "roles")
                 .Match(filter).As<PopulatedUser>()
                 .First();
-        }
-
-        public List<User> ReadMany()
-        {
-            return ReadRecords();
         }
 
         public List<PopulatedUser> ReadManyPopulated()

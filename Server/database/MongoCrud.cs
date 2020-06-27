@@ -2,6 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Server
 {
@@ -9,7 +10,7 @@ namespace Server
     {
         protected IMongoDatabase db;
         protected IMongoCollection<T> collection;
-        private string database;
+        private readonly string database;
 
         public MongoCrud(string database, string table)
         {
@@ -32,6 +33,15 @@ namespace Server
         {
             var filter = Builders<T>.Filter.Eq("_id", id);
             return collection.Find(filter).First();
+        }
+
+        public T ReadRecord(Expression<Func<T, bool>> filter = null)
+        {
+            if (DocumentCount == 0) return default;
+
+            var foundList = collection.Find(filter);
+            if (foundList.CountDocuments() == 0) return default;
+            return foundList.First();
         }
 
         public void UpdateRecord(ObjectId id, T record)

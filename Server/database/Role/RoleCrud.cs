@@ -15,35 +15,5 @@ namespace Server.database.Roles
 
         }
 
-        public void Create(Role role)
-        {
-            CreateRecord(role);
-        }
-
-        public void Delete(ObjectId id)
-        {
-            DeleteRecord(id);
-        }
-
-        public void Update(ObjectId id, Role role)
-        {
-            UpdateRecord(id, role);
-        }
-
-        public Role ReadOne(ObjectId id)
-        {
-            return ReadRecordById(id);
-        }
-
-        public Role ReadOne(string name)
-        {
-            var filter = Builders<Role>.Filter.Eq("name", name);
-            return collection.Find(filter).First();
-        }
-
-        public List<Role> ReadMany()
-        {
-            return ReadRecords();
-        }
     }
 }
