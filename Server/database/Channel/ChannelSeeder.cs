@@ -19,7 +19,7 @@ namespace Server.database.Channels
 
             for (var i = 0; i < amountOfRoles; i++)
             {
-                channelCrud.Create(new Channel
+                channelCrud.CreateRecord(new Channel
                 {
                     name = Faker.Company.Name(),
                     description = Faker.Lorem.Paragraph(5),

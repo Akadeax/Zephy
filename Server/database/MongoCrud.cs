@@ -10,7 +10,6 @@ namespace Server
     {
         protected IMongoDatabase db;
         protected IMongoCollection<T> collection;
-        private readonly string database;
 
         public MongoCrud(string database, string table)
         {

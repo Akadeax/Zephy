@@ -17,14 +17,14 @@ namespace Server.database.Roles
 
             for (var i = 0; i < amountOfRoles; i++)
             {
-                roleCrud.Create(new Role
+                roleCrud.CreateRecord(new Role
                 {
                     name = Faker.Company.Name(),
                     description = Faker.Lorem.Paragraph(5),
                 });
             }
 
-            roleCrud.Create(new Role
+            roleCrud.CreateRecord(new Role
             {
                 name = "administrator",
                 description = "manages all users, channels and roles."

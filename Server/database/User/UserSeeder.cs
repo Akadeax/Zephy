@@ -54,7 +54,6 @@ namespace Server
             for (var i = 0; i < 5; i++)
             {
                 int randomCount = r.Next(1, roles.Count);
-                Console.WriteLine(roles[randomCount]._id);
                 randomRoles.Add(roles[randomCount]._id);
             }
             return randomRoles;

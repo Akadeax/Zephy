@@ -10,21 +10,23 @@ namespace Server
 {
     class Program
     {
-        static ServerSocket serverSocket = new ServerSocket();
+        static readonly ServerSocket serverSocket = new ServerSocket();
 
         public const int PORT = 6556;
 
-        static void Main(string[] args)
+        static void Main()
         {
             #region Seeding
             // Will only seed empty collections in the Zephy database
             SeederHandler s = new SeederHandler();
             s.Start(entrees: 100);
 
-            EmployeeCrud employeeCrud = new EmployeeCrud("Zephy");
+            UserCrud userCrud = new UserCrud("Zephy");
 
             // This will get a list of all employees in the system
-            List<Employee> employees = employeeCrud.LoadEmployees();
+            List<User> users = userCrud.ReadRecords();
+            // remove later, this is just so VS doesn't complain
+            _ = users;
             #endregion
 
             #region Socket
