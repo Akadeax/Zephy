@@ -26,6 +26,6 @@ namespace Server.database.Channels
 
     public class PopulatedChannel : ChannelBase
     {
-        public List<PopulatedMessages> popMessages = new List<PopulatedMessages>();
+        public List<PopulatedMessage> popMessages = new List<PopulatedMessage>();
     }
 }

@@ -5,6 +5,7 @@ using Server.database.seeders;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Net;
+using Server.validation;
 
 namespace Server
 {
@@ -17,13 +18,11 @@ namespace Server
             #region Seeding
             // Will only seed empty collections in the Zephy database
             SeederHandler s = new SeederHandler();
-            s.Start(entrees:100);
-
-            UserCrud employeeCrud = new UserCrud("Zephy");
-
-            // This will get a list of all employees in the system
-            List<User> employees = employeeCrud.LoadEmployees();
+            s.Start(entrees:50);
             #endregion
+
+            bool user = Validator.Validate("goodwaifu");
+            Console.WriteLine(user);
 
             #region Socket
             // Start the actual TCP Server

@@ -6,61 +6,45 @@ using System.Collections.Generic;
 
 namespace Server
 {
-    /// <summary>
-    /// This class is derived from the basic MongoCRUD and will Create Read Update Delete only Employee records
-    /// </summary>
     public class UserCrud : MongoCrud<User>
     {
         public const string COLLECTION_NAME = "Users";
-        private RoleCache roleCache;
 
-        public UserCrud(string database)
-            : base(database, COLLECTION_NAME)
+        public UserCrud(string database) : base(database, COLLECTION_NAME)
         {
-            roleCache = new RoleCache(database);
+
         }
 
-        public void InsertEmployee(User record) 
+        public void Create(User user) 
         {
-            CreateRecord(record);
+            CreateRecord(user);
         }
 
-        public List<User> LoadEmployees()
+        public void Update(ObjectId id, User user)
         {
-            return ReadRecords();
+            UpdateRecord(id, user);
         }
 
-        public PopulatedUser Populate(User user)
+        public void Delete(ObjectId id)
         {
-            List<Role> roles = new List<Role>();
-            foreach(ObjectId id in user.roles)
-            {
-                roles.Add(roleCache.GetRole(id));
-            }
-
-            return new PopulatedUser
-            {
-                name = user.name,
-                roles = roles,
-                _id = user._id
-            };
+            DeleteRecord(id);
         }
 
-        /// <summary>
-        /// Loads an employee by id
-        /// </summary>
-        /// <param name="id">the id to load the employee by</param>
-        /// <returns>the Employee that was loaded by ID by this method</returns>
-        public User LoadUser(ObjectId id)
+        public User ReadOne(ObjectId id)
         {
-            var filter = Builders<User>.Filter.Eq("_id", id);
-            return collection.Find(filter).First();
+            return ReadRecordById(id);
         }
 
+        public User ReadOne(string name)
+        {
+            if (DocumentCount == 0) return null;
+            var found = collection.Find(x => x.name == name);
 
+            if (found.CountDocuments() == 0) return null;
+            return found.First();
+        }
 
-        [Obsolete("Not optimized, use methods that adopt the caching approach")]
-        public PopulatedUser LoadPopulatedUser(ObjectId id)
+        public PopulatedUser ReadOnePopulated(ObjectId id)
         {
             FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.Eq("_id", id);
             return collection
@@ -70,8 +54,12 @@ namespace Server
                 .First();
         }
 
-        [Obsolete("Not optimized, use methods that adopt the caching approach")]
-        public List<PopulatedUser> LoadPopulatedEmployees()
+        public List<User> ReadMany()
+        {
+            return ReadRecords();
+        }
+
+        public List<PopulatedUser> ReadManyPopulated()
         {
             return collection
                 .Aggregate()

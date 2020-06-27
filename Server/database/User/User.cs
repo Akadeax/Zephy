@@ -10,6 +10,7 @@ namespace Server
     {
         public ObjectId _id;
         public string name;
+        public string password;
     }
 
     public class User : UserBase

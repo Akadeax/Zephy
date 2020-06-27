@@ -17,12 +17,18 @@ namespace Server.database.Roles
 
             for (var i = 0; i < amountOfRoles; i++)
             {
-                roleCrud.InsertRole(new Role
+                roleCrud.Create(new Role
                 {
                     name = Faker.Company.Name(),
                     description = Faker.Lorem.Paragraph(5),
                 });
             }
+
+            roleCrud.Create(new Role
+            {
+                name = "administrator",
+                description = "manages all users, channels and roles."
+            });
         }
     }
 }

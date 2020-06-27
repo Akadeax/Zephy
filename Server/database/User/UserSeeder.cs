@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using MongoDB.Bson;
 using Server.database.Roles;
 
@@ -7,53 +8,56 @@ namespace Server
 {
     class UserSeeder
     {
-        private UserCrud employeeCrud;
-        private RoleCache roleCache;
+        private UserCrud userCrud;
+        private RoleCrud roleCrud;
 
         public UserSeeder()
         {
-            employeeCrud = new UserCrud("Zephy");
-            roleCache = new RoleCache("Zephy");
+            userCrud = new UserCrud("Zephy");
+            roleCrud = new RoleCrud("Zephy");
         }
 
         public void Seed(int amountOfEmployees)
         {
-            if (employeeCrud.DocumentCount > 0) return;
+            if (userCrud.DocumentCount > 0) return;
 
             for (var i = 0; i < amountOfEmployees; i++)
             {
-                employeeCrud.InsertEmployee(new User
+                userCrud.Create(new User
                 {
                     roles = GetRandomRoles(),
-                    name = Faker.Name.FullName()
+                    name = Faker.Name.FullName(),
+                    password = "test",
                 });
             }
+
+            List<ObjectId> roleList = new List<ObjectId>();
+            Role AdminRole = roleCrud.ReadOne("administrator");
+            roleList.Add(AdminRole._id);
+
+            userCrud.Create(new User
+            {
+                roles = roleList,
+                name = "admin",
+                password = "root"
+            });
         }
 
         public List<ObjectId> GetRandomRoles()
         {
-            // init roles (if roleCache is empty load it)
-            List<Role> roles;
-            if(roleCache.Empty)
+            List<ObjectId> randomRoles = new List<ObjectId>();
+
+            List<Role> roles = roleCrud.ReadMany();
+
+            Random r = new Random();
+
+            for (var i = 0; i < 5; i++)
             {
-                roleCache.ReloadCache();
+                int randomCount = r.Next(1, roles.Count);
+                Console.WriteLine(roles[randomCount]._id);
+                randomRoles.Add(roles[randomCount]._id);
             }
-            roles = roleCache.GetRoles();
-
-            List<ObjectId> newRoles = new List<ObjectId>();
-
-            Random rnd = new Random();
-            int randRolesAmount = rnd.Next(1, 5);
-
-            for(int i = 0; i < randRolesAmount; i++)
-            {
-                int rndIndex = rnd.Next(roles.Count);
-                Role rndRole = roles[rndIndex];
-                newRoles.Add(rndRole._id);
-                roles.Remove(rndRole);
-            }
-
-            return newRoles;
+            return randomRoles;
         }
     }
 }

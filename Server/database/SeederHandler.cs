@@ -5,8 +5,8 @@ namespace Server.database.seeders
 {
     class SeederHandler
     {
-        public UserSeeder es;
         public RoleSeeder rs;
+        public UserSeeder es;
 
         public SeederHandler()
         {

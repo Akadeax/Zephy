@@ -1,6 +1,7 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
+using Server.database.Messages;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Server.database.Channels
 {
@@ -13,29 +14,48 @@ namespace Server.database.Channels
 
         }
 
-        public void Create()
+        public void Create(Channel channel)
         {
-
+            CreateRecord(channel);
         }
 
-        public void Update()
+        public void Update(ObjectId id, Channel channel)
         {
-
+            UpdateRecord(id, channel);
         }
 
-        public void Delete()
+        public void Delete(ObjectId id)
         {
-
+            DeleteRecord(id);
         }
 
-        public void ReadOne()
+        public Channel ReadOne(ObjectId id)
         {
-
+            return ReadRecordById(id);
         }
 
-        public void ReadMany()
+        public PopulatedChannel ReadOnePopulated(ObjectId id)
         {
+            FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.Eq("_id", id);
+            return collection
+                .Aggregate()
+                .Lookup(MessageCrud.COLLECTION_NAME, "channel", "_id", "channel")
+                .Match(filter).As<PopulatedChannel>()
+                .First();
+        }
 
+        public List<Channel> ReadMany()
+        {
+            return ReadRecords();
+        }
+
+        public List<PopulatedChannel> ReadManyPopulated()
+        {
+            return collection
+                .Aggregate()
+                .Lookup(MessageCrud.COLLECTION_NAME, "channel", "_id", "channel")
+                .As<PopulatedChannel>()
+                .ToList();
         }
     }
 }
