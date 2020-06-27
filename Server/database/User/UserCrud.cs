@@ -15,15 +15,6 @@ namespace Server
 
         }
 
-        public User ReadOne(string name)
-        {
-            if (DocumentCount == 0) return null;
-            var found = collection.Find(x => x.name == name);
-
-            if (found.CountDocuments() == 0) return null;
-            return found.First();
-        }
-
         public PopulatedUser ReadOnePopulated(ObjectId id)
         {
             FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.Eq("_id", id);
