@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
 
 namespace Packets
 {
@@ -30,35 +31,48 @@ namespace Packets
                 return ReadUShort(2);
             }
         }
+
         public static ushort GetPacketType(byte[] buffer)
         {
             return new Packet(buffer).PacketType;
         }
 
-        public ushort ReadUShort(int offset)
+        protected ushort ReadUShort(int offset)
         {
             return BitConverter.ToUInt16(buffer, offset);
         }
 
-        public void WriteUShort(ushort value, int offset)
+        protected void WriteUShort(ushort value, int offset)
         {
-            byte[] valueBuffer = new byte[2];
-            valueBuffer = BitConverter.GetBytes(value);
+            byte[] valueBuffer = BitConverter.GetBytes(value);
             Array.Copy(valueBuffer, 0, buffer, offset, valueBuffer.Length);
         }
 
 
-        public string ReadString(int offset, int count)
+        protected string ReadString(int offset, int count)
         {
             return Encoding.UTF8.GetString(buffer, offset, count);
         }
 
-        public void WriteString(string value, int offset)
+        protected void WriteString(string value, int offset)
         {
             byte[] valueBuffer = new byte[value.Length];
             valueBuffer = Encoding.UTF8.GetBytes(value);
 
             Array.Copy(valueBuffer, 0, buffer, offset, valueBuffer.Length);
+        }
+
+
+        protected T ReadJsonObject<T>()
+        {
+            string json = ReadString(BASE_PACKET_SIZE, 0);
+            return JsonSerializer.Deserialize<T>(json);
+        }
+
+        protected void WriteJsonObject<T>(T toWrite)
+        {
+            string json = JsonSerializer.Serialize(toWrite);
+            WriteString(json, BASE_PACKET_SIZE);
         }
     }
 }
