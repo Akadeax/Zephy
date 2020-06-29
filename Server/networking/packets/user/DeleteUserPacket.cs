@@ -4,15 +4,8 @@ using System.Text;
 
 namespace Packets.User
 {
-    // DeleteUser has the exact same arguments as a Logout
-    class DeleteUserPacket : Auth.LogoutPacket
+    class DeleteUserPacket
     {
-        public new const int TYPE = 2101;
-
-        public DeleteUserPacket(string username)
-            : base(username) { }
-
-        public DeleteUserPacket(byte[] packet)
-            : base(packet) { }
+        public const int TYPE = 2101;
     }
 }

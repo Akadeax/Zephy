@@ -52,7 +52,6 @@ namespace Server
             Socket clientSocket = (Socket)result.AsyncState;
             if (clientSocket == null) return;
 
-            // output SocketError cause VS throws us an exception otherwise (why??)
             int bufferSize = clientSocket.EndReceive(result, out SocketError err);
             if (err != SocketError.Success)
             {

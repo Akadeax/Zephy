@@ -1,46 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Packets.Auth
 {
+    public class LoginPacketData
+    {
+        public string username, password;
+
+        public LoginPacketData(string username, string password)
+        {
+            this.username = username;
+            this.password = password;
+        }
+    }
+
     class LoginPacket : Packet
     {
         public const int TYPE = 2000;
 
-        private string username;
-        private string password;
-
-        // Send structure: (ushort)LEN(ushort)TYPE(string)USERNAME|(string)PASSWORD
-        public LoginPacket(string username, string password)
-            : base(Convert.ToUInt16(BASE_PACKET_SIZE + username.Length + password.Length + 1), TYPE)
+        public LoginPacket(LoginPacketData data) : base(TYPE)
         {
-            this.username = username;
-            this.password = password;
+            Data = data;
         }
 
         public LoginPacket(byte[] packet)
             : base(packet) { }
 
-        public string ReadUsernamePassword()
+        
+        private LoginPacketData Data
         {
-            return ReadString(BASE_PACKET_SIZE, Buffer.Length - BASE_PACKET_SIZE);
+            get { return ReadJsonObject<LoginPacketData>(); }
+            set { WriteJsonObject(value); }
         }
 
         public string Username
         {
-            get
-            {
-                return ReadUsernamePassword().Split('|')[0];
-            }
+            get { return Data.username; }
         }
 
         public string Password
         {
-            get
-            {
-                return ReadUsernamePassword().Split('|')[1];
-            }
+            get { return Data.password; }
         }
     }
 }

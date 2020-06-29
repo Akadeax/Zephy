@@ -4,31 +4,46 @@ using System.Text;
 
 namespace Packets.General
 {
+    public class IdentifyPacketData
+    {
+        public string src;
+
+        public IdentifyPacketData(string src)
+        {
+            this.src = src;
+        }
+    }
+
     class IdentifyPacket : Packet
     {
         public const int TYPE = 1000;
 
-        string src = "";
-
-        public IdentifyPacket(string src)
-            : base(Convert.ToUInt16(BASE_PACKET_SIZE + src.Length), TYPE)
+        public IdentifyPacket(IdentifyPacketData data) : base(TYPE)
         {
-            Src = src;
+            Data = data;
         }
 
         public IdentifyPacket(byte[] packet)
             : base(packet) { }
 
+        public IdentifyPacketData Data
+        {
+            get
+            {
+                return ReadJsonObject<IdentifyPacketData>();
+            }
+            set
+            {
+                WriteJsonObject(value);
+            }
+        }
+
+
         public string Src
         {
             get 
             {
-                return ReadString(BASE_PACKET_SIZE, Buffer.Length - BASE_PACKET_SIZE);
-            }
-            private set
-            {
-                src = value;
-                WriteString(value, BASE_PACKET_SIZE);
+                return Data.src;
             }
         }
     }

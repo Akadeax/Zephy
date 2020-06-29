@@ -4,15 +4,8 @@ using System.Text;
 
 namespace Packets.User
 {
-    // CreateUser has the exact same arguments as a Login
-    class CreateUserPacket : Auth.LoginPacket
+    class CreateUserPacket
     {
-        public new const int TYPE = 2100;
-
-        public CreateUserPacket(string username, string password)
-            : base(username, password) { }
-
-        public CreateUserPacket(byte[] packet)
-            : base(packet) { }
+        public const int TYPE = 2100;
     }
 }

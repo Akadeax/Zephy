@@ -5,6 +5,7 @@ using Server.database.seeders;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Net;
+using Packets.Auth;
 
 namespace Server
 {
@@ -29,7 +30,13 @@ namespace Server
             _ = users;
             #endregion
 
+
             #region Socket
+            // Start the UDP Broadcast Receiver that answers Clients search for the server's local IP
+            BroadcastReceiver receiver = new BroadcastReceiver(PORT);
+            receiver.StartReceive();
+
+
             // Start the actual TCP Server
             serverSocket.Bind(PORT);
             serverSocket.Listen(backlog: 500);
@@ -38,9 +45,6 @@ namespace Server
 
             Console.WriteLine("Listening...");
 
-            // Start the UDP Broadcast Receiver that answers Clients search for the server's local IP
-            BroadcastReceiver receiver = new BroadcastReceiver(PORT);
-            receiver.StartReceive();
 
             while (true)
             {

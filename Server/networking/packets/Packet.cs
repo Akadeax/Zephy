@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace Packets
 {
     public class Packet
     {
-        protected const byte BASE_PACKET_SIZE = 4;
+        protected const byte BASE_PACKET_SIZE = 2;
 
-        private byte[] buffer;
+        protected byte[] buffer;
         public byte[] Buffer { get => buffer; }
 
-        protected Packet(ushort len, ushort type)
+        protected Packet(ushort type)
         {
-            buffer = new byte[len];
-            WriteUShort(len, 0);
-            WriteUShort(type, 2);
+            buffer = new byte[BASE_PACKET_SIZE];
+            WriteUShort(type, 0);
         }
 
         protected Packet(byte[] packet)
@@ -28,7 +27,7 @@ namespace Packets
         {
             get
             {
-                return ReadUShort(2);
+                return ReadUShort(0);
             }
         }
 
@@ -65,13 +64,20 @@ namespace Packets
 
         protected T ReadJsonObject<T>()
         {
-            string json = ReadString(BASE_PACKET_SIZE, 0);
-            return JsonSerializer.Deserialize<T>(json);
+            string json = ReadString(BASE_PACKET_SIZE, buffer.Length - BASE_PACKET_SIZE);
+            return JsonConvert.DeserializeObject<T>(json);
         }
 
         protected void WriteJsonObject<T>(T toWrite)
         {
-            string json = JsonSerializer.Serialize(toWrite);
+            string json = JsonConvert.SerializeObject(toWrite);
+            int TARGET_LEN = BASE_PACKET_SIZE + json.Length;
+            if (buffer.Length != TARGET_LEN)
+            {
+                byte[] newBuffer = new byte[TARGET_LEN];
+                Array.Copy(buffer, 0, newBuffer, 0, BASE_PACKET_SIZE);
+                buffer = newBuffer;
+            }
             WriteString(json, BASE_PACKET_SIZE);
         }
     }

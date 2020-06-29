@@ -27,9 +27,8 @@ namespace Packets
                 return SHUTDOWN;
             }
 
-            ushort packetLength = BitConverter.ToUInt16(packet, 0);
-            ushort packetType = BitConverter.ToUInt16(packet, 2);
-            Console.WriteLine($"Received packet, Length: {packetLength} | Type: {packetType}");
+            ushort packetType = BitConverter.ToUInt16(packet, 0);
+            Console.WriteLine($"Received packet, Length: {packet.Length} | Type: {packetType}");
 
             switch (packetType)
             {
