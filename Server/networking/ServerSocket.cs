@@ -63,9 +63,9 @@ namespace Server
             Array.Copy(buffer, packet, packet.Length);
 
             // Handle the packet
-            int res = PacketHandler.Handle(packet, clientSocket);
+            int res = PacketReceiver.Handle(packet, clientSocket);
             // If packet is empty, close Socket & return out of function for this socket (it closed)
-            if (res == PacketHandler.SHUTDOWN) return;
+            if (res == PacketReceiver.SHUTDOWN) return;
 
             BeginReceive(clientSocket);
         }

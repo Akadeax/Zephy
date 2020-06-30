@@ -23,6 +23,7 @@ namespace Packets
             buffer = packet;
         }
 
+
         public ushort PacketType
         {
             get
