@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using Newtonsoft.Json;
 
 namespace Packets.Auth
 {
-    public class LoginPacketData
+    class LoginPacketData
     {
         public string username, password;
 
@@ -13,6 +15,15 @@ namespace Packets.Auth
         {
             this.username = username;
             this.password = password;
+        }
+    }
+
+    class LoginPacketHandler : PacketHandler<LoginPacket>
+    {
+        protected override void Handle(LoginPacket packet, Socket sender)
+        {
+            IPEndPoint ep = sender.LocalEndPoint as IPEndPoint;
+            Console.WriteLine($"Login attempt with '{packet.Username}' and '{packet.Password}' from {ep.Address}.");
         }
     }
 
@@ -29,7 +40,7 @@ namespace Packets.Auth
             : base(packet) { }
 
         
-        private LoginPacketData Data
+        protected LoginPacketData Data
         {
             get { return ReadJsonObject<LoginPacketData>(); }
             set { WriteJsonObject(value); }

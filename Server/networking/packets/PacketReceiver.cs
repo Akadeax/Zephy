@@ -17,6 +17,12 @@ namespace Packets
     {
         public const int SHUTDOWN = 1;
 
+        private static readonly Dictionary<int, PacketHandler> handlers = new Dictionary<int, PacketHandler>()
+        {
+            { IdentifyPacket.TYPE, new IdentifyPacketHandler() },
+            { LoginPacket.TYPE, new LoginPacketHandler() },
+        };
+
         public static int Handle(byte[] packet, Socket clientSocket)
         {
             // 0 Length packet indicates close from the other side
@@ -31,22 +37,13 @@ namespace Packets
             ushort packetType = BitConverter.ToUInt16(packet, 0);
             Console.WriteLine($"Received packet, Length: {packet.Length} | Type: {packetType}");
 
-            switch (packetType)
+            if(handlers.ContainsKey(packetType))
             {
-                case LoginPacket.TYPE:
-                    LoginPacket loginPacket = new LoginPacket(packet);
-                    Console.WriteLine($"Received login attempt with {loginPacket.Username} and password {loginPacket.Password}.");
-                    break;
-
-                case DeleteUserPacket.TYPE:
-                    DeleteUserPacket deleteUserPacket = new DeleteUserPacket(packet);
-
-                    Server.UserCrud userCrud = new Server.UserCrud("Zephy");
-                    Server.User user = userCrud.ReadRecordById(deleteUserPacket.ToDeleteId);
-
-                    Console.WriteLine($"Received Delete user packet, deleting {deleteUserPacket.ToDeleteId} ({user.name}).");
-                    userCrud.DeleteRecord(deleteUserPacket.ToDeleteId);
-                    break;
+                handlers[packetType].Handle(packet, clientSocket);
+            }
+            else
+            {
+                Console.WriteLine($"Packet Type '{packetType}' could not be identified/handled.");
             }
 
 

@@ -1,10 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Text;
 using Newtonsoft.Json;
 
 namespace Packets
 {
+    /* Top class makes it usable in contexts like 'List<PacketHandler>' without
+       having to provide a generic type, which is needed in PacketReceiver.cs */
+    public abstract class PacketHandler
+    {
+        public abstract void Handle(byte[] buffer, Socket sender);
+    }
+
+    public abstract class PacketHandler<TPacketType> : PacketHandler where TPacketType : Packet
+    {
+        protected abstract void Handle(TPacketType packet, Socket sender);
+
+        public override void Handle(byte[] buffer, Socket sender)
+        {
+            // convert from byte[] to new instance of specified Packet
+            // by calling T's constructor with buffer as argument
+            object packet = Activator.CreateInstance(typeof(TPacketType), buffer);
+            // cast is safe -> packet is always typeof(TPacketType)
+            Handle(packet as TPacketType, sender);
+        }
+    }
+
     public class Packet
     {
         protected const byte BASE_PACKET_SIZE = 2;
@@ -18,7 +40,7 @@ namespace Packets
             WriteUShort(type, 0);
         }
 
-        protected Packet(byte[] packet)
+        public Packet(byte[] packet)
         {
             buffer = packet;
         }

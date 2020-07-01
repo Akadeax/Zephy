@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 
 namespace Packets.General
@@ -11,6 +13,15 @@ namespace Packets.General
         public IdentifyPacketData(string src)
         {
             this.src = src;
+        }
+    }
+
+    class IdentifyPacketHandler : PacketHandler<IdentifyPacket>
+    {
+        protected override void Handle(IdentifyPacket packet, Socket sender)
+        {
+            IPEndPoint ep = sender.LocalEndPoint as IPEndPoint;
+            Console.WriteLine($"Received TCP Identify from {ep.Address} as {packet.Src}");
         }
     }
 
@@ -26,25 +37,16 @@ namespace Packets.General
         public IdentifyPacket(byte[] packet)
             : base(packet) { }
 
-        public IdentifyPacketData Data
+        protected IdentifyPacketData Data
         {
-            get
-            {
-                return ReadJsonObject<IdentifyPacketData>();
-            }
-            set
-            {
-                WriteJsonObject(value);
-            }
+            get { return ReadJsonObject<IdentifyPacketData>(); }
+            set { WriteJsonObject(value); }
         }
 
 
         public string Src
         {
-            get 
-            {
-                return Data.src;
-            }
+            get { return Data.src; }
         }
     }
 }
