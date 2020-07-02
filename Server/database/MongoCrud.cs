@@ -28,6 +28,11 @@ namespace Server
             return collection.Find(new BsonDocument()).ToList();
         }
 
+        public List<T> ReadRecords(Expression<Func<T, bool>> filter = null)
+        {
+            return collection.Find(filter).ToList();
+        }
+
         public T ReadRecordById(ObjectId id)
         {
             var filter = Builders<T>.Filter.Eq("_id", id);
