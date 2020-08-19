@@ -6,6 +6,8 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Net;
 using Packets.Auth;
+using System.Text;
+using Packets.General;
 
 namespace Server
 {
@@ -48,7 +50,9 @@ namespace Server
 
             while (true)
             {
-                Console.ReadLine();
+                // TODO: Remove, only for debugging
+                string cmd = Console.ReadLine();
+                if (cmd == "clear") Console.Clear();
             }
             #endregion
         }

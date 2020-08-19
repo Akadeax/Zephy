@@ -74,7 +74,11 @@ namespace Server
         {
             // Empty buffer and wait for receive from clientSocket again
             buffer = new byte[1024];
-            clientSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, OnDataReceived, clientSocket);
+
+            if(clientSocket.Connected)
+            {
+                clientSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, OnDataReceived, clientSocket);
+            }
         }
     }
 }

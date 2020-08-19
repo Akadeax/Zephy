@@ -16,6 +16,7 @@ namespace Server
 
         public BroadcastReceiver(int port)
         {
+            Console.WriteLine("constructin");
             this.port = port;
             client = new UdpClient();
             client.Client.Bind(new IPEndPoint(IPAddress.Any, port));
@@ -46,7 +47,6 @@ namespace Server
             // instantly start handling the next one while this one sends back)
             StartReceive();
 
-            Console.WriteLine(Packet.GetPacketType(receivedResult.Buffer));
             if (Packet.GetPacketType(receivedResult.Buffer) != IdentifyPacket.TYPE) return;
 
             IdentifyPacket recvPacket = new IdentifyPacket(receivedResult.Buffer);
@@ -57,8 +57,9 @@ namespace Server
             Console.WriteLine($"received IdentifyPacket from Client {receivedFrom.Address}.");
 
             // Send Packet with identifier "SERVER" back to client
-            //to indicate that it was the server that sent data back
+            // to indicate that it was the server that sent data back
             IdentifyPacket sendPacket = new IdentifyPacket(new IdentifyPacketData("SERVER"));
+
             await client.Client.SendToAsync(sendPacket.Buffer, SocketFlags.None, receivedFrom);
             Console.WriteLine($"sending IdentifyPacket from Server back to sender.");
         }

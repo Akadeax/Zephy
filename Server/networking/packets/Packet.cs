@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace Packets
 {
     /* Top class makes it usable in contexts like 'List<PacketHandler>' without
-       having to provide a generic type, which is needed in PacketReceiver.cs */
+       having to provide a generic type, which is needed in e.g. PacketReceiver.cs */
     public abstract class PacketHandler
     {
         public abstract void Handle(byte[] buffer, Socket sender);
