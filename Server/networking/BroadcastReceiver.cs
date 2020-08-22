@@ -16,7 +16,6 @@ namespace Server
 
         public BroadcastReceiver(int port)
         {
-            Console.WriteLine("constructin");
             this.port = port;
             client = new UdpClient();
             client.Client.Bind(new IPEndPoint(IPAddress.Any, port));

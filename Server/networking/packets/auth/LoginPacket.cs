@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using Newtonsoft.Json;
+using Server;
 
 namespace Packets.Auth
 {
@@ -24,6 +25,8 @@ namespace Packets.Auth
         {
             IPEndPoint ep = sender.LocalEndPoint as IPEndPoint;
             Console.WriteLine($"Login attempt with '{packet.Username}' and '{packet.Password}' from {ep.Address}.");
+            Packet retPacket = new LoginAcceptedPacket(new LoginAcceptedPacketData());
+            Zephy.serverSocket.SendPacket(retPacket, sender);
         }
     }
 

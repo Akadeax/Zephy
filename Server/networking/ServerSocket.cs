@@ -38,6 +38,7 @@ namespace Server
         private void OnAccepted(IAsyncResult result)
         {
             Socket clientSocket = socket.EndAccept(result);
+            Console.WriteLine($"Accepting connection from {clientSocket.RemoteEndPoint.ToString()}.");
             // start receiving data from the client that just connected (async, w/ callbacks)
             BeginReceive(clientSocket);
             // after accepting current client keep on accepting new ones
@@ -79,6 +80,11 @@ namespace Server
             {
                 clientSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, OnDataReceived, clientSocket);
             }
+        }
+
+        public void SendPacket(Packet packet, Socket client)
+        {
+            client.Send(packet.Buffer);
         }
     }
 }

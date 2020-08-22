@@ -11,9 +11,9 @@ using Packets.General;
 
 namespace Server
 {
-    class Program
+    class Zephy
     {
-        static readonly ServerSocket serverSocket = new ServerSocket();
+        public static readonly ServerSocket serverSocket = new ServerSocket();
 
         public const int PORT = 6556;
 
