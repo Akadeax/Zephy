@@ -1,51 +1,48 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using Newtonsoft.Json;
 using Server;
 
 namespace Packets.Auth
 {
-    class LoginPacketData
+    class LoginAttemptData
     {
         public string username, password;
 
-        public LoginPacketData(string username, string password)
+        public LoginAttemptData(string username, string password)
         {
             this.username = username;
             this.password = password;
         }
     }
 
-    class LoginPacketHandler : PacketHandler<LoginPacket>
+    class LoginAttemptPacketHandler : PacketHandler<LoginAttemptPacket>
     {
-        protected override void Handle(LoginPacket packet, Socket sender)
+        protected override void Handle(LoginAttemptPacket packet, Socket sender)
         {
             IPEndPoint ep = sender.LocalEndPoint as IPEndPoint;
             Console.WriteLine($"Login attempt with '{packet.Username}' and '{packet.Password}' from {ep.Address}.");
-            Packet retPacket = new LoginAcceptedPacket(new LoginAcceptedPacketData());
+            Packet retPacket = new LoginResultPacket(new LoginResultPacketData((int)HttpStatusCode.OK));
             Zephy.serverSocket.SendPacket(retPacket, sender);
         }
     }
 
-    class LoginPacket : Packet
+    class LoginAttemptPacket : Packet
     {
         public const int TYPE = 2000;
 
-        public LoginPacket(LoginPacketData data) : base(TYPE)
+        public LoginAttemptPacket(LoginAttemptData data) : base(TYPE)
         {
             Data = data;
         }
 
-        public LoginPacket(byte[] packet)
+        public LoginAttemptPacket(byte[] packet)
             : base(packet) { }
 
         
-        protected LoginPacketData Data
+        protected LoginAttemptData Data
         {
-            get { return ReadJsonObject<LoginPacketData>(); }
+            get { return ReadJsonObject<LoginAttemptData>(); }
             set { WriteJsonObject(value); }
         }
 

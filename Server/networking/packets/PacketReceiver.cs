@@ -20,7 +20,7 @@ namespace Packets
         private static readonly Dictionary<int, PacketHandler> handlers = new Dictionary<int, PacketHandler>()
         {
             { IdentifyPacket.TYPE, new IdentifyPacketHandler() },
-            { LoginPacket.TYPE, new LoginPacketHandler() },
+            { LoginAttemptPacket.TYPE, new LoginAttemptPacketHandler() },
         };
 
         public static int Handle(byte[] packet, Socket clientSocket)

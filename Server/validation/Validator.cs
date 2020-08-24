@@ -8,10 +8,7 @@ namespace Server.validation
     {
         public static bool Validate(string name)
         {
-            UserCrud uc = new UserCrud("Zephy");
-            User user = uc.ReadRecord(x => x.name == name);
-
-            return (user != null);
+            return true;
         }
 
     }
