@@ -1,5 +1,5 @@
 ﻿using Packets;
-using Packets.General;
+using Packets.general;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -40,7 +40,7 @@ namespace Server
 
         private async Task ReceiveDataAsync()
         {
-            Console.WriteLine("trying to receive UDP BC...");
+            Zephy.Logger.Information("trying to receive UDP BC...");
             UdpReceiveResult receivedResult = await client.ReceiveAsync();
             // start new thread as soon as we have received any data (so we can
             // instantly start handling the next one while this one sends back)
@@ -53,14 +53,14 @@ namespace Server
 
 
             IPEndPoint receivedFrom = new IPEndPoint(receivedResult.RemoteEndPoint.Address, receivedResult.RemoteEndPoint.Port);
-            Console.WriteLine($"received IdentifyPacket from Client {receivedFrom.Address}.");
+            Zephy.Logger.Information($"received IdentifyPacket from Client {receivedFrom.Address}.");
 
             // Send Packet with identifier "SERVER" back to client
             // to indicate that it was the server that sent data back
             IdentifyPacket sendPacket = new IdentifyPacket(new IdentifyPacketData("SERVER"));
 
             await client.Client.SendToAsync(sendPacket.Buffer, SocketFlags.None, receivedFrom);
-            Console.WriteLine($"sending IdentifyPacket from Server back to sender.");
+            Zephy.Logger.Information($"sending IdentifyPacket from Server back to sender.");
         }
     }
 }

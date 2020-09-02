@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 
-using Packets.General;
-using Packets.Auth;
-using Packets.Message;
-using Packets.User;
-using Packets.Channel;
-using MongoDB.Bson;
+using Server;
+
+using Packets.general;
+using Packets.auth;
+using Packets.channel;
+using Packets.message;
 
 namespace Packets
 {
@@ -21,6 +20,8 @@ namespace Packets
         {
             { IdentifyPacket.TYPE, new IdentifyPacketHandler() },
             { LoginAttemptPacket.TYPE, new LoginAttemptPacketHandler() },
+            { AccessibleChannelsInfoPacket.TYPE, new AccessibleChannelsInfoPacketHandler() },
+            { PopulateMessagesPacket.TYPE, new PopulateMessagesPacketHandler() },
         };
 
         public static int Handle(byte[] packet, Socket clientSocket)
@@ -29,13 +30,13 @@ namespace Packets
             if (packet.Length == 0)
             {
                 IPAddress disconnectedAddress = (clientSocket.LocalEndPoint as IPEndPoint).Address;
-                Console.WriteLine($"{disconnectedAddress.ToString()} has disconnected, closing & disposing socket.");
+                Zephy.Logger.Information($"{disconnectedAddress} has disconnected, closing & disposing socket.");
                 clientSocket.Close();
                 return SHUTDOWN;
             }
 
             ushort packetType = BitConverter.ToUInt16(packet, 0);
-            Console.WriteLine($"Received packet, Length: {packet.Length} | Type: {packetType}");
+            Zephy.Logger.Information($"Received packet, Length: {packet.Length} | Type: {packetType}");
 
             if(handlers.ContainsKey(packetType))
             {
@@ -43,7 +44,7 @@ namespace Packets
             }
             else
             {
-                Console.WriteLine($"Packet Type '{packetType}' could not be identified/handled.");
+                Zephy.Logger.Information($"Packet Type '{packetType}' could not be identified/handled.");
             }
 
 

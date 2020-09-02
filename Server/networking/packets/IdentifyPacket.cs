@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Server;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 
-namespace Packets.General
+namespace Packets.general
 {
     public class IdentifyPacketData
     {
@@ -21,7 +23,11 @@ namespace Packets.General
         protected override void Handle(IdentifyPacket packet, Socket sender)
         {
             IPEndPoint ep = sender.LocalEndPoint as IPEndPoint;
-            Console.WriteLine($"Received TCP Identify from {ep.Address} as {packet.Src}");
+            Zephy.Logger.Information($"Received TCP Identify from {ep.Address} as {packet.Src}, sending back in 1 second.");
+            Zephy.Logger.Debug("Received!");
+            Thread.Sleep(1000);
+            Zephy.Logger.Debug("Done sleeping!");
+            sender.Send(new IdentifyPacket(new IdentifyPacketData("SERVER")).Buffer);
         }
     }
 

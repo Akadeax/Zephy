@@ -4,34 +4,56 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Net;
-using Packets.Auth;
+using Packets.auth;
 using System.Text;
-using Packets.General;
+using Packets.general;
+using Server.database.user;
+using Server.database;
+using Server.database.message;
+using Server.database.channel;
+using Newtonsoft.Json;
+using Server.database.role;
+using Serilog;
+using Serilog.Core;
+using Packets.channel;
+using System.Linq;
+using Packets.message;
+using System.Xml;
 
 namespace Server
 {
     class Zephy
     {
+        public static Logger Logger { get; } = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .CreateLogger();
+
+        public static readonly BroadcastReceiver broadcastReceiver = new BroadcastReceiver(PORT);
         public static readonly ServerSocket serverSocket = new ServerSocket();
 
         public const int PORT = 6556;
 
         static void Main()
         {
+            #region Seeding
+            SeederHandler.Seed(new SeederEntriesAmount
+            {
+                userSeederAmount = 30,
+                roleSeederAmount = 7,
+                channelSeederAmount = 8,
+                messageSeederAmount = 20000,
+            });
+            #endregion
+
             #region Socket
             // Start UDP Broadcast Receiver that answers Clients search for the server's local IP
-            BroadcastReceiver receiver = new BroadcastReceiver(PORT);
-            receiver.StartReceive();
-
+            broadcastReceiver.StartReceive();
 
             // Start TCP Server
-            serverSocket.Bind(PORT);
-            serverSocket.Listen(backlog: 500);
-            // Start client accept loop
-            serverSocket.Accept();
+            serverSocket.Start(PORT);
 
-            Console.WriteLine("Listening...");
-
+            Logger.Information("Listening to new connections...");
 
             while (true)
             {

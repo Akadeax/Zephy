@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 
 namespace Server.utilities
 {
@@ -28,6 +29,18 @@ namespace Server.utilities
                 list[k] = list[n];
                 list[n] = value;
             }
+        }
+
+        public static string PrettyJson(this string unPrettyJson)
+        {
+            var options = new JsonSerializerOptions()
+            {
+                WriteIndented = true
+            };
+
+            var jsonElement = JsonSerializer.Deserialize<JsonElement>(unPrettyJson);
+
+            return JsonSerializer.Serialize(jsonElement, options);
         }
     }
 }

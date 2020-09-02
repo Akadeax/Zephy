@@ -4,16 +4,19 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using Newtonsoft.Json;
+using Server.database.user;
 
-namespace Packets.Auth
+namespace Packets.auth
 {
     class LoginResultPacketData
     {
         public int statusCode;
+        public PopulatedUser user;
 
-        public LoginResultPacketData(int statusCode)
+        public LoginResultPacketData(int statusCode, PopulatedUser user)
         {
             this.statusCode = statusCode;
+            this.user = user;
         }
         
     }
@@ -36,7 +39,7 @@ namespace Packets.Auth
             : base(packet) { }
 
 
-        protected LoginResultPacketData Data
+        public LoginResultPacketData Data
         {
             get { return ReadJsonObject<LoginResultPacketData>(); }
             set { WriteJsonObject(value); }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace Packets.Auth
+namespace Packets.auth
 {
     public class LogoutPacketData
     {
