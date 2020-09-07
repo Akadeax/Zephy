@@ -27,17 +27,21 @@ namespace Packets
         }
     }
 
+    public abstract class PacketData { }
+
     public class Packet
     {
-        protected const byte BASE_PACKET_SIZE = 2;
+        protected const byte BASE_PACKET_SIZE = 4;
 
         protected byte[] buffer;
         public byte[] Buffer { get => buffer; }
 
-        protected Packet(ushort type)
+        protected Packet(ushort type, PacketData data)
         {
             buffer = new byte[BASE_PACKET_SIZE];
             WriteUShort(type, 0);
+            int jsonLen = JsonConvert.SerializeObject(data).Length;
+            WriteUShort((ushort)(BASE_PACKET_SIZE + jsonLen), 2);
         }
 
         public Packet(byte[] packet)
@@ -54,9 +58,22 @@ namespace Packets
             }
         }
 
+        public ushort PacketLength
+        {
+            get
+            {
+                return ReadUShort(2);
+            }
+        }
+
         public static ushort GetPacketType(byte[] buffer)
         {
             return new Packet(buffer).PacketType;
+        }
+
+        public static ushort GetPacketLength(byte[] buffer)
+        {
+            return new Packet(buffer).PacketLength;
         }
 
         protected ushort ReadUShort(int offset)
@@ -87,8 +104,16 @@ namespace Packets
 
         protected T ReadJsonObject<T>()
         {
-            string json = ReadString(BASE_PACKET_SIZE, buffer.Length - BASE_PACKET_SIZE);
-            return JsonConvert.DeserializeObject<T>(json);
+            try
+            {
+
+                string json = ReadString(BASE_PACKET_SIZE, buffer.Length - BASE_PACKET_SIZE);
+                return JsonConvert.DeserializeObject<T>(json);
+            }
+            catch (Exception)
+            {
+                return default;
+            }
         }
 
         protected void WriteJsonObject<T>(T toWrite)

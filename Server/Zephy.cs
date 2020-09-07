@@ -1,24 +1,16 @@
 ﻿using System;
-using MongoDB.Bson;
-using System.Collections.Generic;
-using System.Net.Sockets;
-using System.Threading.Tasks;
-using System.Net;
-using Packets.auth;
-using System.Text;
-using Packets.general;
-using Server.database.user;
 using Server.database;
-using Server.database.message;
-using Server.database.channel;
-using Newtonsoft.Json;
-using Server.database.role;
 using Serilog;
 using Serilog.Core;
-using Packets.channel;
-using System.Linq;
+using Newtonsoft.Json;
 using Packets.message;
-using System.Xml;
+using Server.database.message;
+using System.Linq;
+using Server.database.channel;
+using Server.database.user;
+using MongoDB.Bson;
+using Server.utilities;
+using Packets.general;
 
 namespace Server
 {
@@ -39,9 +31,9 @@ namespace Server
             #region Seeding
             SeederHandler.Seed(new SeederEntriesAmount
             {
-                userSeederAmount = 30,
+                userSeederAmount = 40,
                 roleSeederAmount = 7,
-                channelSeederAmount = 8,
+                channelSeederAmount = 15,
                 messageSeederAmount = 20000,
             });
             #endregion
@@ -59,6 +51,25 @@ namespace Server
             {
                 string cmd = Console.ReadLine();
                 if (cmd == "clear") Console.Clear();
+                else if(cmd == "ins")
+                {
+                    Console.Write("OID: ");
+                    string oid = Console.ReadLine();
+                    Channel channel = new ChannelCrud().ReadOneById(oid);
+
+                    Message message = new Message
+                    {
+                        _id = ObjectId.GenerateNewId().ToString(),
+                        author = new UserCrud().ReadOne()._id,
+                        content = "git gud",
+                        sentAt = Util.RandTimestamp(),
+                    };
+
+                    new MessageCrud().CreateOne(message);
+                    channel.messages.Add(message._id);
+                    Console.WriteLine("did");
+                    new ChannelCrud().UpdateOne(oid, channel);
+                }
             }
             #endregion
         }

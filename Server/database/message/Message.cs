@@ -1,21 +1,22 @@
-﻿using MongoDB.Bson;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
+using Server.database.channel;
 using Server.database.user;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Server.database.message
 {
     public class MessageBase
     {
-        public ObjectId _id;
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
+        public string _id;
         public string content;
         public int sentAt;
+        public string channel;
     }
 
     public class Message : MessageBase
     {
-        public ObjectId author;
+        public string author;
     }
 
     public class PopulatedMessage : MessageBase

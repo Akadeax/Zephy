@@ -16,7 +16,7 @@ namespace Server.database.channel
 
         public ChannelCrud() : base(COLLECTION_NAME) { }
 
-        public PopulatedChannel ReadOnePopulated(ObjectId id)
+        public PopulatedChannel ReadOnePopulated(string id)
         {
             return ReadOnePopulated(x => x._id == id);
         }

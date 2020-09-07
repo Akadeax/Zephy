@@ -1,4 +1,6 @@
 ﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
 using Server.database.message;
 using Server.database.role;
 using System;
@@ -9,15 +11,16 @@ namespace Server.database.channel
 {
     public class BaseChannelData
     {
-        public ObjectId _id;
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
+        public string _id;
         public string name;
         public string description;
     }
 
     public class Channel : BaseChannelData
     {
-        public List<ObjectId> roles;
-        public List<ObjectId> messages;
+        public List<string> roles;
+        public List<string> messages;
 
         public BaseChannelData AsBaseChannelData
         {

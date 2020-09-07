@@ -8,10 +8,11 @@ using Newtonsoft.Json;
 using Server;
 using Server.database.user;
 using Server.utilities;
+using System.Linq;
 
 namespace Packets.auth
 {
-    class LoginAttemptPacketData
+    class LoginAttemptPacketData : PacketData
     {
         public string email, password;
 
@@ -28,20 +29,23 @@ namespace Packets.auth
 
         protected override void Handle(LoginAttemptPacket packet, Socket sender)
         {
+            var data = packet.Data;
+            if (data == null) return;
+
             IPEndPoint ep = sender.LocalEndPoint as IPEndPoint;
-            Zephy.Logger.Information($"Login attempt with '{packet.Data.email}' and '{packet.Data.password}' from {ep.Address}.");
+            Zephy.Logger.Information($"Login attempt with '{data.email}' and '{data.password}' from {ep.Address}.");
 
             HttpStatusCode code = HttpStatusCode.OK;
-            PopulatedUser user = userCrud.ReadOnePopulated(x => x.email == packet.Data.email);
+            PopulatedUser user = userCrud.ReadOnePopulated(x => x.email == data.email);
 
-            if (user == null || user.password != packet.Data.password)
+            if (user == null || user.password != data.password)
             {
                 code = HttpStatusCode.Unauthorized;
                 user = null;
             }
 
-            LoginResultPacket retPacket = new LoginResultPacket(
-                new LoginResultPacketData((int)code,
+            LoginResultPacket retPacket = new LoginResultPacket(new LoginResultPacketData(
+                (int)code,
                 user
             ));
 
@@ -53,7 +57,7 @@ namespace Packets.auth
     {
         public const int TYPE = 2000;
 
-        public LoginAttemptPacket(LoginAttemptPacketData data) : base(TYPE)
+        public LoginAttemptPacket(LoginAttemptPacketData data) : base(TYPE, data)
         {
             Data = data;
         }

@@ -1,4 +1,5 @@
 ﻿using Packets;
+using Packets.auth;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -83,7 +84,7 @@ namespace Server
         private void BeginReceive(Socket clientSocket)
         {
             // Empty buffer and wait for receive from clientSocket again
-            buffer = new byte[1024];
+            buffer = new byte[4096];
 
             if(clientSocket.Connected)
             {

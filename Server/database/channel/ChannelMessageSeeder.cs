@@ -2,7 +2,7 @@
 using Server.database.message;
 using Server.database.role;
 using Server.database.user;
-
+using Server.utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +10,12 @@ namespace Server.database.channel
 {
     class ChannelMessageSeeder : MongoSeeder
     {
-        UserCrud userCrud = new UserCrud();
-        RoleCrud roleCrud = new RoleCrud();
-        ChannelCrud channelCrud = new ChannelCrud();
-        MessageCrud messageCrud = new MessageCrud();
+        readonly UserCrud userCrud = new UserCrud();
+        readonly RoleCrud roleCrud = new RoleCrud();
+        readonly ChannelCrud channelCrud = new ChannelCrud();
+        readonly MessageCrud messageCrud = new MessageCrud();
 
-        Random rnd = new Random();
+        readonly Random rnd = new Random();
 
         public override void Seed(SeederEntriesAmount amount)
         {
@@ -29,16 +29,17 @@ namespace Server.database.channel
             int messagesPerChannel = (int)((float)amount.messageSeederAmount / amount.channelSeederAmount);
             for (int c = 0; c < amount.channelSeederAmount; c++)
             {
-                List<ObjectId> channelRoles = RoleSeeder.GetRandomRoles(roleCrud, 2)
+                List<string> channelRoles = RoleSeeder.GetRandomRoles(roleCrud, 2)
                     .Select(x => x._id)
                     .ToList();
 
                 Channel newChannel = new Channel
                 {
+                    _id = ObjectId.GenerateNewId().ToString(),
                     name = Faker.Lorem.Sentence(1),
                     description = Faker.Lorem.Sentence(1),
                     roles = channelRoles,
-                    messages = new List<ObjectId>(),
+                    messages = new List<string>(),
                 };
 
                 List<User> canSeeChannel = UserUtil.GetUsersWithPermission(userCrud, channelRoles);
@@ -47,12 +48,15 @@ namespace Server.database.channel
                 {
                     if (canSeeChannel.Count == 0 || canSeeChannel == null) break;
 
-                    ObjectId author = canSeeChannel[rnd.Next(canSeeChannel.Count)]._id;
+                    string author = canSeeChannel[rnd.Next(canSeeChannel.Count)]._id;
+                    int rndTimestamp = Util.RandTimestamp();
                     Message msg = new Message
                     {
-                        _id = ObjectId.GenerateNewId(),
+                        _id = ObjectId.GenerateNewId().ToString(),
                         content = Faker.Lorem.Sentence(20),
                         author = author,
+                        channel = newChannel._id,
+                        sentAt = rndTimestamp++,
                     };
 
                     newChannel.messages.Add(msg._id);

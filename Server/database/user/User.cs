@@ -1,4 +1,6 @@
 ﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
 using Server.database.role;
 using System;
 using System.Collections.Generic;
@@ -8,7 +10,8 @@ namespace Server.database.user
 {
     public class UserBase
     {
-        public ObjectId _id;
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
+        public string _id;
         public string name;
         public string email;
         public string password;
@@ -16,7 +19,7 @@ namespace Server.database.user
 
     public class User : UserBase
     {
-        public List<ObjectId> roles;
+        public List<string> roles;
     }
     public class PopulatedUser : UserBase
     {

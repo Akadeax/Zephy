@@ -13,12 +13,38 @@ namespace Server.database.message
     {
         public const string COLLECTION_NAME = "messages";
 
-        public MessageCrud() : base(COLLECTION_NAME) { }
+        public MessageCrud() : base(COLLECTION_NAME) 
+        {
+            InitIndexes();
+        }
 
-        public PopulatedMessage ReadOnePopulated(ObjectId id)
+        async void InitIndexes()
+        {
+            var notificationLogBuilder = Builders<Message>.IndexKeys;
+            var indexModel = new CreateIndexModel<Message>(notificationLogBuilder.Descending(x => x.sentAt));
+            await collection.Indexes.CreateOneAsync(indexModel).ConfigureAwait(false);
+        }
+
+        public PopulatedMessage ReadOnePopulated(string id)
         {
             return ReadOnePopulated(x => x._id == id);
         }
+
+        public List<PopulatedMessage> ReadManyPopulatedSorted(Expression<Func<Message, bool>> filter = null)
+        {
+            if (filter == null) filter = x => true;
+
+            return collection
+                .Aggregate()
+                .SortByDescending(x => x.sentAt)
+                .Match(filter)
+                .Lookup(UserCrud.COLLECTION_NAME, "author", "_id", "author")
+                .Unwind("author")
+                .As<PopulatedMessage>()
+                .ToList();
+
+        }
+
         public PopulatedMessage ReadOnePopulated(Expression<Func<Message, bool>> filter = null)
         {
             return ReadManyPopulated(filter).FirstOrDefault();

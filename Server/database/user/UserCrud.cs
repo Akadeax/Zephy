@@ -15,7 +15,7 @@ namespace Server.database.user
 
         public UserCrud() : base(COLLECTION_NAME) { }
 
-        public PopulatedUser ReadOnePopulated(ObjectId id)
+        public PopulatedUser ReadOnePopulated(string id)
         {
             return ReadOnePopulated(x => x._id == id);
         }

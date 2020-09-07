@@ -10,12 +10,12 @@ using System.Text;
 
 namespace Packets.channel
 {
-    public class AccessibleChannelsInfoPacketData
+    public class AccessibleChannelsInfoPacketData : PacketData
     {
         public List<BaseChannelData> accessibleChannelsData;
-        public ObjectId forUser;
+        public string forUser;
 
-        public AccessibleChannelsInfoPacketData(List<BaseChannelData> accessibleChannelsData, ObjectId forUser)
+        public AccessibleChannelsInfoPacketData(List<BaseChannelData> accessibleChannelsData, string forUser)
         {
             this.accessibleChannelsData = accessibleChannelsData;
             this.forUser = forUser;
@@ -29,9 +29,10 @@ namespace Packets.channel
 
         protected override void Handle(AccessibleChannelsInfoPacket packet, Socket sender)
         {
-            Zephy.Logger.Information("Received Request for AccessibleChannelsData");
-
             var data = packet.Data;
+            if (data == null) return;
+
+            Zephy.Logger.Information("Received Request for AccessibleChannelsData");
 
             PopulatedUser forUser = userCrud.ReadOnePopulated(data.forUser);
             var accessibleChannels = new List<BaseChannelData>();
@@ -39,7 +40,7 @@ namespace Packets.channel
             {
                 foreach (Channel currChannel in channelCrud.ReadMany())
                 {
-                    foreach (ObjectId currUserRole in forUser.roles.Select(x => x._id))
+                    foreach (string currUserRole in forUser.roles.Select(x => x._id))
                     {
                         if (currChannel.roles.Contains(currUserRole))
                         {
@@ -64,7 +65,7 @@ namespace Packets.channel
     {
         public const int TYPE = 3001;
 
-        public AccessibleChannelsInfoPacket(AccessibleChannelsInfoPacketData data) : base(TYPE)
+        public AccessibleChannelsInfoPacket(AccessibleChannelsInfoPacketData data) : base(TYPE, data)
         {
             Data = data;
         }

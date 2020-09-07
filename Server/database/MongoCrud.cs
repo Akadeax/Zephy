@@ -37,7 +37,7 @@ namespace Server.database
             return collection.Find(filter).ToList();
         }
 
-        public T ReadOneById(ObjectId id)
+        public T ReadOneById(string id)
         {
             var filter = Builders<T>.Filter.Eq("_id", id);
             return collection.Find(filter).FirstOrDefault();
@@ -54,7 +54,7 @@ namespace Server.database
             return foundList.FirstOrDefault();
         }
 
-        public void UpdateOne(ObjectId id, T record)
+        public void UpdateOne(string id, T record)
         {
             collection.ReplaceOne(
                 new BsonDocument("_id", id),
@@ -63,7 +63,7 @@ namespace Server.database
             );
         }
 
-        public void DeleteOne(ObjectId id)
+        public void DeleteOne(string id)
         {
             var filter = Builders<T>.Filter.Eq("_id", id);
             collection.DeleteOne(filter);

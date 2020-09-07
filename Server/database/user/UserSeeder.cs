@@ -29,7 +29,7 @@ namespace Server.database.user
 
             for (int i = 0; i < amount.userSeederAmount; i++)
             {
-                List<ObjectId> roles = RoleSeeder.GetRandomRoles(roleCrud, 3)
+                List<string> roles = RoleSeeder.GetRandomRoles(roleCrud, 3)
                 .Select(x => x._id)
                 .ToList();
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 
@@ -8,6 +9,8 @@ namespace Server.utilities
 {
     static class Util
     {
+        private static Random rand = new Random();
+
         /// <summary>
         /// Joins Strings in list with ',' in between
         /// </summary>
@@ -16,7 +19,6 @@ namespace Server.utilities
             return String.Join(",", list.ToArray());
         }
 
-        private static Random rng = new Random();
 
         public static void Shuffle<T>(this IList<T> list)
         {
@@ -24,7 +26,7 @@ namespace Server.utilities
             while (n > 1)
             {
                 n--;
-                int k = rng.Next(n + 1);
+                int k = rand.Next(n + 1);
                 T value = list[k];
                 list[k] = list[n];
                 list[n] = value;
@@ -41,6 +43,26 @@ namespace Server.utilities
             var jsonElement = JsonSerializer.Deserialize<JsonElement>(unPrettyJson);
 
             return JsonSerializer.Serialize(jsonElement, options);
+        }
+
+        public static int RandTimestamp()
+        {
+            int utcStart = new DateTime(2020, 1, 1).ToUnixTimestamp();
+            int utcEnd = DateTime.UtcNow.ToUnixTimestamp();
+
+            return rand.Next(utcStart, utcEnd);
+        }
+
+        public static int ToUnixTimestamp(this DateTime date)
+        {
+            return (int)(date - DateTime.UnixEpoch).TotalSeconds;
+        }
+
+        public static T[] SubArray<T>(this T[] data, int index, int length)
+        {
+            T[] result = new T[length];
+            Array.Copy(data, index, result, 0, length);
+            return result;
         }
     }
 }

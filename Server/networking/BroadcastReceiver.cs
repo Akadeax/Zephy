@@ -49,7 +49,7 @@ namespace Server
             if (Packet.GetPacketType(receivedResult.Buffer) != IdentifyPacket.TYPE) return;
 
             IdentifyPacket recvPacket = new IdentifyPacket(receivedResult.Buffer);
-            if (recvPacket.Src != "CLIENT") return;
+            if (recvPacket.Data.src != "CLIENT") return;
 
 
             IPEndPoint receivedFrom = new IPEndPoint(receivedResult.RemoteEndPoint.Address, receivedResult.RemoteEndPoint.Port);

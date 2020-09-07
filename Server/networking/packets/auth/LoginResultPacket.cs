@@ -8,7 +8,7 @@ using Server.database.user;
 
 namespace Packets.auth
 {
-    class LoginResultPacketData
+    class LoginResultPacketData : PacketData
     {
         public int statusCode;
         public PopulatedUser user;
@@ -30,7 +30,7 @@ namespace Packets.auth
     {
         public const int TYPE = 2002;
 
-        public LoginResultPacket(LoginResultPacketData data) : base(TYPE)
+        public LoginResultPacket(LoginResultPacketData data) : base(TYPE, data)
         {
             Data = data;
         }
