@@ -1,23 +1,27 @@
-﻿using Server.database.Roles;
+﻿using Server.database.channel;
+using Server.database.role;
+using Server.database.user;
 using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace Server.database.seeders
+namespace Server.database
 {
-    class SeederHandler
+    public class SeederHandler
     {
-        public RoleSeeder rs;
-        public UserSeeder es;
-
-        public SeederHandler()
+        public static void Seed(SeederEntriesAmount amounts)
         {
-            rs = new RoleSeeder();
-            es = new UserSeeder();
+            new RoleSeeder().Seed(amounts);
+            new UserSeeder().Seed(amounts);
+            new ChannelMessageSeeder().Seed(amounts);
         }
-
-        public void Start(int entrees)
-        {
-            rs.Seed(entrees);
-            es.Seed(entrees);
-        }
+    }
+    
+    public class SeederEntriesAmount
+    {
+        public int roleSeederAmount = 5;
+        public int userSeederAmount = 5;
+        public int channelSeederAmount = 3;
+        public int messageSeederAmount = 100;
     }
 }

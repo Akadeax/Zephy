@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Server;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
+using System.Threading;
 
-namespace Packets.General
+namespace Packets.general
 {
-    public class IdentifyPacketData
+    public class IdentifyPacketData : PacketData
     {
         public string src;
 
@@ -20,8 +19,15 @@ namespace Packets.General
     {
         protected override void Handle(IdentifyPacket packet, Socket sender)
         {
+            var data = packet.Data;
+            if (data == null) return;
+
             IPEndPoint ep = sender.LocalEndPoint as IPEndPoint;
-            Console.WriteLine($"Received TCP Identify from {ep.Address} as {packet.Src}");
+            Zephy.Logger.Information($"Received TCP Identify from {ep.Address} as {data.src}, sending back in 1 second.");
+            Zephy.Logger.Debug("Received!");
+            Thread.Sleep(1000);
+            Zephy.Logger.Debug("Done sleeping!");
+            Zephy.serverSocket.SendPacket(new IdentifyPacket(new IdentifyPacketData("SERVER")), sender);
         }
     }
 
@@ -29,7 +35,7 @@ namespace Packets.General
     {
         public const int TYPE = 1000;
 
-        public IdentifyPacket(IdentifyPacketData data) : base(TYPE)
+        public IdentifyPacket(IdentifyPacketData data) : base(TYPE, data)
         {
             Data = data;
         }
@@ -37,16 +43,10 @@ namespace Packets.General
         public IdentifyPacket(byte[] packet)
             : base(packet) { }
 
-        protected IdentifyPacketData Data
+        public IdentifyPacketData Data
         {
             get { return ReadJsonObject<IdentifyPacketData>(); }
             set { WriteJsonObject(value); }
-        }
-
-
-        public string Src
-        {
-            get { return Data.src; }
         }
     }
 }

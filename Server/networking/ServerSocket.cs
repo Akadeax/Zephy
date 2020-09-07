@@ -1,4 +1,5 @@
 ﻿using Packets;
+using Packets.auth;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -15,6 +16,15 @@ namespace Server
         {
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         }
+
+        public void Start(int port)
+        {
+            Bind(port);
+            Listen(500);
+            // Start client accept loop
+            Accept();
+        }
+
 
         public void Bind(int port)
         {
@@ -38,7 +48,7 @@ namespace Server
         private void OnAccepted(IAsyncResult result)
         {
             Socket clientSocket = socket.EndAccept(result);
-            Console.WriteLine($"Accepting connection from {clientSocket.RemoteEndPoint.ToString()}.");
+            Zephy.Logger.Information($"Accepting connection from {clientSocket.RemoteEndPoint.ToString()}.");
             // start receiving data from the client that just connected (async, w/ callbacks)
             BeginReceive(clientSocket);
             // after accepting current client keep on accepting new ones
@@ -74,7 +84,7 @@ namespace Server
         private void BeginReceive(Socket clientSocket)
         {
             // Empty buffer and wait for receive from clientSocket again
-            buffer = new byte[1024];
+            buffer = new byte[4096];
 
             if(clientSocket.Connected)
             {

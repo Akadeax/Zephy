@@ -1,54 +1,60 @@
-﻿using System;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Text;
 
-namespace Server
+namespace Server.database
 {
     public abstract class MongoCrud<T>
     {
+        protected const string DATABASE = "Zephy";
+
         protected IMongoDatabase db;
         protected IMongoCollection<T> collection;
 
-        public MongoCrud(string database, string table)
+        public MongoCrud(string table)
         {
             var client = new MongoClient();
-            db = client.GetDatabase(database);
+            db = client.GetDatabase(DATABASE);
             collection = db.GetCollection<T>(table);
         }
 
-        public void CreateRecord(T record)
+        public void CreateOne(T record)
         {
             collection.InsertOne(record);
         }
 
-        public List<T> ReadRecords()
+        public List<T> ReadMany()
         {
             return collection.Find(new BsonDocument()).ToList();
         }
 
-        public List<T> ReadRecords(Expression<Func<T, bool>> filter = null)
+        public List<T> ReadMany(Expression<Func<T, bool>> filter)
         {
+            if (filter == null) return ReadMany();
             return collection.Find(filter).ToList();
         }
 
-        public T ReadRecordById(ObjectId id)
+        public T ReadOneById(string id)
         {
             var filter = Builders<T>.Filter.Eq("_id", id);
-            return collection.Find(filter).First();
+            return collection.Find(filter).FirstOrDefault();
         }
 
-        public T ReadRecord(Expression<Func<T, bool>> filter = null)
+        public T ReadOne(Expression<Func<T, bool>> filter = null)
         {
             if (DocumentCount == 0) return default;
+            // if filter isn't specified, use filter that allows everything
+            if (filter == null) filter = x => true;
 
             var foundList = collection.Find(filter);
             if (foundList.CountDocuments() == 0) return default;
-            return foundList.First();
+            return foundList.FirstOrDefault();
         }
 
-        public void UpdateRecord(ObjectId id, T record)
+        public void UpdateOne(string id, T record)
         {
             collection.ReplaceOne(
                 new BsonDocument("_id", id),
@@ -57,7 +63,7 @@ namespace Server
             );
         }
 
-        public void DeleteRecord(ObjectId id)
+        public void DeleteOne(string id)
         {
             var filter = Builders<T>.Filter.Eq("_id", id);
             collection.DeleteOne(filter);
