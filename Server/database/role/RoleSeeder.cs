@@ -33,10 +33,7 @@ namespace Server.database.role
             List<Role> records = crud.ReadMany(filter);
             if(records.Count < roleAmount)
             {
-                throw new ArgumentException(
-                    $"Couldn't fetch {roleAmount} roles, only {records.Count} exist",
-                    "roleAmount"
-                );
+                Zephy.Logger.Error($"Couldn't fetch {roleAmount} roles, only {records.Count} exist");
             }
 
             records.Shuffle();

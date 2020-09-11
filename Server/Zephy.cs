@@ -1,16 +1,15 @@
-﻿using System;
-using Server.database;
-using Serilog;
-using Serilog.Core;
+﻿using MongoDB.Bson;
 using Newtonsoft.Json;
 using Packets.message;
-using Server.database.message;
-using System.Linq;
+using Serilog;
+using Serilog.Core;
+using Server.database;
 using Server.database.channel;
+using Server.database.message;
 using Server.database.user;
-using MongoDB.Bson;
 using Server.utilities;
-using Packets.general;
+using Server.utilityData;
+using System;
 
 namespace Server
 {
@@ -34,7 +33,7 @@ namespace Server
                 userSeederAmount = 40,
                 roleSeederAmount = 7,
                 channelSeederAmount = 15,
-                messageSeederAmount = 20000,
+                messageSeederAmount = 10000,
             });
             #endregion
 
@@ -51,24 +50,20 @@ namespace Server
             {
                 string cmd = Console.ReadLine();
                 if (cmd == "clear") Console.Clear();
-                else if(cmd == "ins")
+                else if (cmd == "q")
                 {
-                    Console.Write("OID: ");
-                    string oid = Console.ReadLine();
-                    Channel channel = new ChannelCrud().ReadOneById(oid);
-
-                    Message message = new Message
+                    serverSocket.CloseAllSockets();
+                    break;
+                }
+                else if(cmd == "dbg")
+                {
+                    UserCrud uc = new UserCrud();
+                    ChannelCrud cc = new ChannelCrud();
+                    Logger.Debug($"Active channels:");
+                    foreach (ActiveUser u in UserUtilData.loggedInUsers.Values)
                     {
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        author = new UserCrud().ReadOne()._id,
-                        content = "git gud",
-                        sentAt = Util.RandTimestamp(),
-                    };
-
-                    new MessageCrud().CreateOne(message);
-                    channel.messages.Add(message._id);
-                    Console.WriteLine("did");
-                    new ChannelCrud().UpdateOne(oid, channel);
+                        Logger.Debug($"'{uc.ReadOneById(u.userId).name}': '{cc.ReadOneById(u.activeChannelId).name}'");
+                    }
                 }
             }
             #endregion

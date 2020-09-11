@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Server;
 using Server.database.channel;
 using Server.database.message;
+using Server.utilityData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +17,14 @@ namespace Packets.message
     {
         public string forChannel;
         public int page;
+        public string user;
         public List<PopulatedMessage> populatedMessages;
 
-        public PopulateMessagesPacketData(string forChannel, List<PopulatedMessage> populatedMessages, int page)
+        public PopulateMessagesPacketData(string forChannel, string user, int page, List<PopulatedMessage> populatedMessages)
         {
             this.forChannel = forChannel;
             this.page = page;
+            this.user = user;
             this.populatedMessages = populatedMessages;
         }
     }
@@ -42,26 +45,28 @@ namespace Packets.message
 
             List<PopulatedMessage> populatedChannelMessages = messageCrud.ReadManyPopulatedSorted(x => x.channel == channel._id);
 
-            for (int i = 0; i < populatedChannelMessages.Count - 1; i++)
-            {
-                if (populatedChannelMessages[i].sentAt < populatedChannelMessages[i + 1].sentAt) Console.WriteLine("FAILED");
-            }
-
-            int lowerBound = Math.Min(channel.messages.Count, data.page * PAGE_SIZE);
-            int upperBound = Math.Min(channel.messages.Count, data.page * PAGE_SIZE + PAGE_SIZE);
+            int lowerBound = Math.Min(populatedChannelMessages.Count, data.page * PAGE_SIZE);
+            int upperBound = Math.Min(populatedChannelMessages.Count, data.page * PAGE_SIZE + PAGE_SIZE);
 
             List<PopulatedMessage> paginatedMessages = new List<PopulatedMessage>();
 
+            // TODO: DOESN'T INCLUDE LAST MESSAGE
             for (int i = lowerBound; i < upperBound; i++)
             {
                 paginatedMessages.Add(populatedChannelMessages[i]);
             }
 
             var returnPacket = new PopulateMessagesPacket(new PopulateMessagesPacketData(
-                data.forChannel, paginatedMessages, data.page
+                data.forChannel, data.user, data.page,
+                paginatedMessages
             ));
 
             Zephy.Logger.Information($"Sending message range {lowerBound} - {upperBound} of channel '{channel.name}' back.");
+
+            if(data.page == 0 && UserUtilData.IsLoggedIn(data.user))
+            {
+                UserUtilData.GetUser(data.user).activeChannelId = data.forChannel;
+            }
 
             sender.Send(returnPacket.Buffer);
         }

@@ -95,8 +95,7 @@ namespace Packets
 
         protected void WriteString(string value, int offset)
         {
-            byte[] valueBuffer = new byte[value.Length];
-            valueBuffer = Encoding.UTF8.GetBytes(value);
+            byte[] valueBuffer = Encoding.UTF8.GetBytes(value);
 
             Array.Copy(valueBuffer, 0, buffer, offset, valueBuffer.Length);
         }

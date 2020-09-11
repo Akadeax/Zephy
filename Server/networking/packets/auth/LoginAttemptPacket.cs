@@ -9,6 +9,7 @@ using Server;
 using Server.database.user;
 using Server.utilities;
 using System.Linq;
+using Server.utilityData;
 
 namespace Packets.auth
 {
@@ -48,6 +49,11 @@ namespace Packets.auth
                 (int)code,
                 user
             ));
+
+            if(user != null)
+            {
+                UserUtilData.loggedInUsers[user._id] = new ActiveUser(user._id, sender);
+            }
 
             Zephy.serverSocket.SendPacket(retPacket, sender);
         }

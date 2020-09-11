@@ -15,7 +15,15 @@ namespace Server.database.channel
         readonly ChannelCrud channelCrud = new ChannelCrud();
         readonly MessageCrud messageCrud = new MessageCrud();
 
+        readonly UserUtil userUtil;
+
         readonly Random rnd = new Random();
+
+        public ChannelMessageSeeder()
+        {
+            userUtil = new UserUtil(userCrud, channelCrud);
+        }
+
 
         public override void Seed(SeederEntriesAmount amount)
         {
@@ -42,7 +50,7 @@ namespace Server.database.channel
                     messages = new List<string>(),
                 };
 
-                List<User> canSeeChannel = UserUtil.GetUsersWithPermission(userCrud, channelRoles);
+                List<User> canSeeChannel = userUtil.GetUsersThatCanView(newChannel);
 
                 for(int m = 0; m < messagesPerChannel; m++)
                 {

@@ -1,100 +1,104 @@
 ﻿using Packets;
 using Packets.auth;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 
 namespace Server
 {
 
     class ServerSocket
     {
-        Socket socket;
-        byte[] buffer;
-
-        public ServerSocket()
-        {
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        }
+        public readonly Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        public readonly List<Socket> clientSockets = new List<Socket>();
+        const int BUFFER_SIZE = 4096;
+        private readonly byte[] buffer = new byte[BUFFER_SIZE];
+        int port;
 
         public void Start(int port)
         {
-            Bind(port);
-            Listen(500);
-            // Start client accept loop
-            Accept();
+            this.port = port;
+
+            Console.Title = "Server";
+            SetupServer();
         }
 
 
-        public void Bind(int port)
+        private void SetupServer()
         {
-            socket.Bind(new IPEndPoint(IPAddress.Any, port));
-        }
-
-        public void Listen(int backlog)
-        {
-            socket.Listen(backlog);
-        }
-
-        public void Accept()
-        {
-            // start accepting any TCP connection async
-            socket.BeginAccept(OnAccepted, null);
+            Zephy.Logger.Information("Setting up TCP Listener...");
+            serverSocket.Bind(new IPEndPoint(IPAddress.Any, port));
+            serverSocket.Listen(0);
+            serverSocket.BeginAccept(AcceptCallback, null);
+            Zephy.Logger.Information("Successfully set up TCP Listener.");
         }
 
         /// <summary>
-        /// Callback when a Client to accept is found
+        /// Close all connected client (we do not need to shutdown the server socket as its connections
+        /// are already closed with the clients).
         /// </summary>
-        private void OnAccepted(IAsyncResult result)
+        public void CloseAllSockets()
         {
-            Socket clientSocket = socket.EndAccept(result);
-            Zephy.Logger.Information($"Accepting connection from {clientSocket.RemoteEndPoint.ToString()}.");
-            // start receiving data from the client that just connected (async, w/ callbacks)
-            BeginReceive(clientSocket);
-            // after accepting current client keep on accepting new ones
-            Accept();
+            foreach (Socket socket in clientSockets)
+            {
+                socket.Shutdown(SocketShutdown.Both);
+                socket.Close();
+            }
+
+            serverSocket.Close();
         }
 
-        /// <summary>
-        /// Callback when any client sends any Data
-        /// </summary>
-        private void OnDataReceived(IAsyncResult result)
+        private void AcceptCallback(IAsyncResult AR)
         {
-            Socket clientSocket = (Socket)result.AsyncState;
-            if (clientSocket == null) return;
+            Socket socket;
 
-            int bufferSize = clientSocket.EndReceive(result, out SocketError err);
+            try
+            {
+                socket = serverSocket.EndAccept(AR);
+            }
+            catch (ObjectDisposedException) // I cannot seem to avoid this (on exit when properly closing sockets)
+            {
+                return;
+            }
+
+            clientSockets.Add(socket);
+            socket.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, socket);
+            Zephy.Logger.Information($"Client from '{socket.LocalEndPoint}' Connected, Waiting for requests...");
+            serverSocket.BeginAccept(AcceptCallback, null);
+        }
+
+        private void ReceiveCallback(IAsyncResult AR)
+        {
+            Socket current = (Socket)AR.AsyncState;
+            int received;
+
+            received = current.EndReceive(AR, out SocketError err);
+
             if (err != SocketError.Success)
             {
-                bufferSize = 0;
+                Zephy.Logger.Information($"Client '{current.LocalEndPoint}' forcefully disconnected!");
+                current.Close();
+                clientSockets.Remove(current);
+                return;
+
             }
 
-            // Basically just a trimmed buffer
-            byte[] packet = new byte[bufferSize];
-            Array.Copy(buffer, packet, packet.Length);
+            byte[] recBuf = new byte[received];
+            Array.Copy(buffer, recBuf, received);
+            string text = Encoding.UTF8.GetString(recBuf);
 
             // Handle the packet
-            int res = PacketReceiver.Handle(packet, clientSocket);
-            // If packet is empty, close Socket & return out of function for this socket (it closed)
+            int res = PacketReceiver.Handle(recBuf, current);
             if (res == PacketReceiver.SHUTDOWN) return;
 
-            BeginReceive(clientSocket);
+            current.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, current);
         }
 
-        private void BeginReceive(Socket clientSocket)
+        public void SendPacket(Packet packet, Socket sendTo)
         {
-            // Empty buffer and wait for receive from clientSocket again
-            buffer = new byte[4096];
-
-            if(clientSocket.Connected)
-            {
-                clientSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, OnDataReceived, clientSocket);
-            }
-        }
-
-        public void SendPacket(Packet packet, Socket client)
-        {
-            client.Send(packet.Buffer);
+            sendTo.Send(packet.Buffer);
         }
     }
 }

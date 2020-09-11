@@ -9,6 +9,8 @@ using Packets.general;
 using Packets.auth;
 using Packets.channel;
 using Packets.message;
+using System.Text.Unicode;
+using System.Text;
 
 namespace Packets
 {
@@ -22,6 +24,7 @@ namespace Packets
             { LoginAttemptPacket.TYPE, new LoginAttemptPacketHandler() },
             { AccessibleChannelsInfoPacket.TYPE, new AccessibleChannelsInfoPacketHandler() },
             { PopulateMessagesPacket.TYPE, new PopulateMessagesPacketHandler() },
+            { MessageSendPacket.TYPE, new MessageSendPacketHandler() },
         };
 
         public static int Handle(byte[] packet, Socket clientSocket)
@@ -45,6 +48,7 @@ namespace Packets
             else
             {
                 Zephy.Logger.Information($"Packet Type '{packetType}' could not be identified/handled.");
+                Console.WriteLine($"--{Encoding.UTF8.GetString(packet)}--");
             }
 
 

@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Server.database.user
 {
-    class UserCrud : MongoCrud<User>
+    public class UserCrud : MongoCrud<User>
     {
         public const string COLLECTION_NAME = "users";
 
