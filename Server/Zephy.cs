@@ -30,10 +30,10 @@ namespace Server
             #region Seeding
             SeederHandler.Seed(new SeederEntriesAmount
             {
-                userSeederAmount = 40,
-                roleSeederAmount = 7,
-                channelSeederAmount = 15,
-                messageSeederAmount = 10000,
+                userSeederAmount = 1000,
+                roleSeederAmount = 100,
+                channelSeederAmount = 500,
+                messageSeederAmount = 5000000,
             });
             #endregion
 

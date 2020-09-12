@@ -10,6 +10,7 @@ using Server.database.user;
 using Server.utilities;
 using System.Linq;
 using Server.utilityData;
+using Server.database.channel;
 
 namespace Packets.auth
 {
@@ -33,6 +34,9 @@ namespace Packets.auth
             var data = packet.Data;
             if (data == null) return;
 
+            ActiveUser author = UserUtilData.GetUser(sender);
+            if (author != null && UserUtilData.IsLoggedIn(author.clientSocket)) return;
+
             IPEndPoint ep = sender.LocalEndPoint as IPEndPoint;
             Zephy.Logger.Information($"Login attempt with '{data.email}' and '{data.password}' from {ep.Address}.");
 
@@ -52,7 +56,7 @@ namespace Packets.auth
 
             if(user != null)
             {
-                UserUtilData.loggedInUsers[user._id] = new ActiveUser(user._id, sender);
+                UserUtilData.AddUser(new ActiveUser(user._id, sender));
             }
 
             Zephy.serverSocket.SendPacket(retPacket, sender);

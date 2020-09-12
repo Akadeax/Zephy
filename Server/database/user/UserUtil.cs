@@ -38,6 +38,8 @@ namespace Server.database.user
 
         public bool UserCanViewChannel(User user, Channel channel)
         {
+            if (user == null || channel == null) return false;
+
             foreach(string roleId in user.roles)
             {
                 if (channel.roles.Contains(roleId)) return true;

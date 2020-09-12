@@ -2,6 +2,7 @@
 using Server;
 using Server.database.channel;
 using Server.database.user;
+using Server.utilityData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,13 +25,15 @@ namespace Packets.channel
 
     public class AccessibleChannelsInfoPacketHandler : PacketHandler<AccessibleChannelsInfoPacket>
     {
-        readonly UserCrud userCrud = new UserCrud();
         readonly ChannelCrud channelCrud = new ChannelCrud();
+        readonly UserCrud userCrud = new UserCrud();
 
         protected override void Handle(AccessibleChannelsInfoPacket packet, Socket sender)
         {
             var data = packet.Data;
             if (data == null) return;
+
+            if (!UserUtilData.IsLoggedIn(sender)) return;
 
             Zephy.Logger.Information("Received Request for AccessibleChannelsData");
 

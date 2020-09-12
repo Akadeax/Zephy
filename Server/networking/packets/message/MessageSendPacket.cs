@@ -7,6 +7,7 @@ using Server.utilities;
 using Server.utilityData;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Net.Sockets;
 using System.Text;
 
@@ -16,15 +17,13 @@ namespace Packets.message
     {
         public string message;
         public string channel;
-        public string author;
 
         public PopulatedMessage returnMessage;
 
-        public MessageSendPacketData(string message, string channel, string author, PopulatedMessage returnMessage)
+        public MessageSendPacketData(string message, string channel, PopulatedMessage returnMessage)
         {
             this.message = message;
             this.channel = channel;
-            this.author = author;
             this.returnMessage = returnMessage;
         }
     }
@@ -32,19 +31,31 @@ namespace Packets.message
     public class MessageSendPacketHandler : PacketHandler<MessageSendPacket>
     {
         readonly MessageCrud messageCrud = new MessageCrud();
+        readonly UserCrud userCrud = new UserCrud();
+        readonly ChannelCrud channelCrud = new ChannelCrud();
+
+        readonly UserUtil userUtil;
+
+        public MessageSendPacketHandler()
+        {
+            userUtil = new UserUtil(userCrud, channelCrud);
+        }
 
         protected override void Handle(MessageSendPacket packet, Socket sender)
         {
             var data = packet.Data;
             if (data == null) return;
 
-            List<ActiveUser> users = UserUtilData.GetActiveInChannel(data.channel);
+            ActiveUser author = UserUtilData.GetUser(sender);
+            if (!userUtil.UserCanViewChannel(author.userId, data.channel)) return;
+
+            List<ActiveUser> activeChannelUsers = UserUtilData.GetActiveInChannel(data.channel);
 
             string msgId = ObjectId.GenerateNewId().ToString();
             Message messageSent = new Message
             {
                 _id = msgId,
-                author = data.author,
+                author = author.userId,
                 channel = data.channel,
                 content = data.message,
                 sentAt = Util.ToUnixTimestamp(DateTime.UtcNow),
@@ -55,11 +66,10 @@ namespace Packets.message
             MessageSendPacket returnPacket = new MessageSendPacket(new MessageSendPacketData(
                 data.message,
                 data.channel,
-                data.author,
                 messageCrud.ReadOnePopulated(msgId)
             ));
 
-            foreach(ActiveUser user in users)
+            foreach(ActiveUser user in activeChannelUsers)
             {
                 if(user.clientSocket.Connected)
                 {

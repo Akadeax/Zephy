@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Server;
 using Server.database.channel;
 using Server.database.message;
+using Server.database.user;
 using Server.utilityData;
 using System;
 using System.Collections.Generic;
@@ -33,13 +34,24 @@ namespace Packets.message
     {
         const int PAGE_SIZE = 25;
 
-        readonly ChannelCrud channelCrud = new ChannelCrud();
         readonly MessageCrud messageCrud = new MessageCrud();
+        readonly ChannelCrud channelCrud = new ChannelCrud();
+        readonly UserCrud userCrud = new UserCrud();
+
+        readonly UserUtil userUtil;
+
+        public PopulateMessagesPacketHandler()
+        {
+            userUtil = new UserUtil(userCrud, channelCrud);
+        }
 
         protected override void Handle(PopulateMessagesPacket packet, Socket sender)
         {
             var data = packet.Data;
             if (data == null) return;
+
+            ActiveUser author = UserUtilData.GetUser(sender);
+            if (!userUtil.UserCanViewChannel(author.userId, data.forChannel)) return;
 
             Channel channel = channelCrud.ReadOneById(data.forChannel);
 

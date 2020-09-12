@@ -3,17 +3,28 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace Server.utilityData
 {
     public static class UserUtilData
     {
-        public static Dictionary<string, ActiveUser> loggedInUsers = new Dictionary<string, ActiveUser>();
+        public static readonly Dictionary<Socket, ActiveUser> loggedInUsers = new Dictionary<Socket, ActiveUser>();
+
+        public static void AddUser(ActiveUser toAdd)
+        {
+            loggedInUsers[toAdd.clientSocket] = toAdd;
+        }
+        public static void RemoveUser(Socket socket)
+        {
+            loggedInUsers.Remove(socket);
+        }
 
         public static ActiveUser GetUser(string id)
         {
-            return loggedInUsers[id];
+            return loggedInUsers.Values.FirstOrDefault(x => x.userId == id);
         }
 
         public static ActiveUser GetUser(Socket clientSocket)
@@ -24,7 +35,15 @@ namespace Server.utilityData
         public static bool IsLoggedIn(string userId)
         {
             if (userId == null) return false;
-            return loggedInUsers.ContainsKey(userId);
+            foreach(var user in loggedInUsers.Values)
+            {
+                if (user.userId == userId) return true;
+            }
+            return false;
+        }
+        public static bool IsLoggedIn(Socket userSocket)
+        {
+            return loggedInUsers.ContainsKey(userSocket);
         }
 
         public static List<ActiveUser> GetActiveInChannel(string channelId)
