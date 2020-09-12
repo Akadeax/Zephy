@@ -33,7 +33,7 @@ namespace Server
                 userSeederAmount = 1000,
                 roleSeederAmount = 100,
                 channelSeederAmount = 500,
-                messageSeederAmount = 5000000,
+                messageSeederAmount = 500000,
             });
             #endregion
 
