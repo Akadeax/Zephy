@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using Server.database.channel;
 using Server.database.role;
+using Server.utilityData;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,6 +17,21 @@ namespace Server.database.user
         {
             this.userCrud = userCrud;
             this.channelCrud = channelCrud;
+        }
+
+        public List<ActiveUser> GetActiveUsersThatCanView(Channel channel)
+        {
+            List<User> usersThatCanView = GetUsersThatCanView(channel);
+            List<ActiveUser> activeUsers = new List<ActiveUser>();
+            foreach(User u in usersThatCanView)
+            {
+                if(UserUtilData.IsLoggedIn(u._id))
+                {
+                    activeUsers.Add(UserUtilData.GetUser(u._id));
+                }
+            }
+
+            return activeUsers;
         }
 
         public List<User> GetUsersThatCanView(Channel channel)

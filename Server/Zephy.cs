@@ -1,11 +1,13 @@
 ﻿using MongoDB.Bson;
 using Newtonsoft.Json;
+using Packets.channel;
 using Packets.message;
 using Serilog;
 using Serilog.Core;
 using Server.database;
 using Server.database.channel;
 using Server.database.message;
+using Server.database.role;
 using Server.database.user;
 using Server.utilities;
 using Server.utilityData;
@@ -20,7 +22,7 @@ namespace Server
                 .WriteTo.Console()
                 .CreateLogger();
 
-        public static readonly BroadcastReceiver broadcastReceiver = new BroadcastReceiver(PORT);
+        public static readonly BroadcastReceiver broadcastReceiver = new BroadcastReceiver(PORT, PORT + 1);
         public static readonly ServerSocket serverSocket = new ServerSocket();
 
         public const int PORT = 6556;
@@ -30,10 +32,10 @@ namespace Server
             #region Seeding
             SeederHandler.Seed(new SeederEntriesAmount
             {
-                userSeederAmount = 1000,
-                roleSeederAmount = 100,
-                channelSeederAmount = 500,
-                messageSeederAmount = 500000,
+                userSeederAmount = 100,
+                roleSeederAmount = 10,
+                channelSeederAmount = 15,
+                messageSeederAmount = 5000,
             });
             #endregion
 
@@ -55,7 +57,7 @@ namespace Server
                     serverSocket.CloseAllSockets();
                     break;
                 }
-                else if(cmd == "dbg")
+                else if (cmd == "dbg")
                 {
                     UserCrud uc = new UserCrud();
                     ChannelCrud cc = new ChannelCrud();

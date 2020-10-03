@@ -25,6 +25,8 @@ namespace Packets
             { AccessibleChannelsInfoPacket.TYPE, new AccessibleChannelsInfoPacketHandler() },
             { PopulateMessagesPacket.TYPE, new PopulateMessagesPacketHandler() },
             { MessageSendPacket.TYPE, new MessageSendPacketHandler() },
+            { FetchChannelRolesPacket.TYPE, new FetchChannelRolesPacketHandler() },
+            { ModifyChannelRolesPacket.TYPE, new ModifyChannelRolesPacketHandler() },
         };
 
         public static int Handle(byte[] packet, Socket clientSocket)

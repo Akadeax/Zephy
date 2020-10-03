@@ -13,9 +13,15 @@ namespace Server.utilityData
     {
         public static readonly Dictionary<Socket, ActiveUser> loggedInUsers = new Dictionary<Socket, ActiveUser>();
 
-        public static void AddUser(ActiveUser toAdd)
+        /// <summary>
+        /// Adds a user to the current list of active users
+        /// </summary>
+        /// <returns>success</returns>
+        public static bool AddUser(ActiveUser toAdd)
         {
+            if(loggedInUsers.Values.Any(x => x.userId == toAdd.userId)) return false;
             loggedInUsers[toAdd.clientSocket] = toAdd;
+            return true;
         }
         public static void RemoveUser(Socket socket)
         {

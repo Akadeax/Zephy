@@ -21,7 +21,7 @@ namespace Server.database.user
 
             userCrud.CreateOne(new User
             {
-                roles = roleCrud.ReadMany().Select(x => x._id).ToList(),
+                roles = new List<string>() { roleCrud.ReadMany().FirstOrDefault(x => x.name == "admin")._id },
                 name = "admin",
                 email = "admin@admin.com",
                 password = "admin",

@@ -49,15 +49,20 @@ namespace Packets.auth
                 user = null;
             }
 
+
+            if(user != null)
+            {
+                bool addSuccess = UserUtilData.AddUser(new ActiveUser(user._id, sender));
+                if (!addSuccess)
+                {
+                    code = HttpStatusCode.Unauthorized;
+                }
+            }
+
             LoginResultPacket retPacket = new LoginResultPacket(new LoginResultPacketData(
                 (int)code,
                 user
             ));
-
-            if(user != null)
-            {
-                UserUtilData.AddUser(new ActiveUser(user._id, sender));
-            }
 
             Zephy.serverSocket.SendPacket(retPacket, sender);
         }

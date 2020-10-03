@@ -17,6 +17,13 @@ namespace Server.database.role
 
             if (roleCrud.DocumentCount > 0) return;
 
+            roleCrud.CreateOne(new Role
+            {
+                _id = RoleCrud.COLLECTION_NAME,
+                name = "admin",
+                description = "the admin role.",
+            });
+
             for (int i = 0; i < amount.roleSeederAmount; i++)
             {
                 roleCrud.CreateOne(new Role

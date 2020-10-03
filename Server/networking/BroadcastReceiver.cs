@@ -5,25 +5,27 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Server
 {
     class BroadcastReceiver
     {
-        private readonly int port;
-        private UdpClient client;
+        readonly UdpClient client;
+        readonly int clientListenPort;
 
-        public BroadcastReceiver(int port)
+        public BroadcastReceiver(int port, int clientListenPort)
         {
-            this.port = port;
             client = new UdpClient();
             client.Client.Bind(new IPEndPoint(IPAddress.Any, port));
+
+            this.clientListenPort = clientListenPort;
         }
 
         ~BroadcastReceiver()
         {
-            client.Close();
+            Close();
         }
         public void Close()
         {
@@ -52,7 +54,7 @@ namespace Server
             if (recvPacket.Data.src != "CLIENT") return;
 
 
-            IPEndPoint receivedFrom = new IPEndPoint(receivedResult.RemoteEndPoint.Address, receivedResult.RemoteEndPoint.Port);
+            IPEndPoint receivedFrom = new IPEndPoint(receivedResult.RemoteEndPoint.Address, clientListenPort);
             Zephy.Logger.Information($"received IdentifyPacket from Client {receivedFrom.Address}.");
 
             // Send Packet with identifier "SERVER" back to client

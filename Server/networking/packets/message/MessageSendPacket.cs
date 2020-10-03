@@ -50,7 +50,7 @@ namespace Packets.message
             if (!userUtil.UserCanViewChannel(author.userId, data.channel)) return;
 
             List<ActiveUser> activeChannelUsers = UserUtilData.GetActiveInChannel(data.channel);
-
+            Console.WriteLine(activeChannelUsers.Count);
             string msgId = ObjectId.GenerateNewId().ToString();
             Message messageSent = new Message
             {

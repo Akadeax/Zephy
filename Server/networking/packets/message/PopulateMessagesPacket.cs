@@ -55,25 +55,14 @@ namespace Packets.message
 
             Channel channel = channelCrud.ReadOneById(data.forChannel);
 
-            List<PopulatedMessage> populatedChannelMessages = messageCrud.ReadManyPopulatedSorted(x => x.channel == channel._id);
-
-            int lowerBound = Math.Min(populatedChannelMessages.Count, data.page * PAGE_SIZE);
-            int upperBound = Math.Min(populatedChannelMessages.Count, data.page * PAGE_SIZE + PAGE_SIZE);
-
-            List<PopulatedMessage> paginatedMessages = new List<PopulatedMessage>();
-
-            // TODO: DOESN'T INCLUDE LAST MESSAGE
-            for (int i = lowerBound; i < upperBound; i++)
-            {
-                paginatedMessages.Add(populatedChannelMessages[i]);
-            }
+            List<PopulatedMessage> paginatedMessages = messageCrud.ReadManyPaginated(channel._id, data.page, PAGE_SIZE);
 
             var returnPacket = new PopulateMessagesPacket(new PopulateMessagesPacketData(
                 data.forChannel, data.user, data.page,
                 paginatedMessages
             ));
 
-            Zephy.Logger.Information($"Sending message range {lowerBound} - {upperBound} of channel '{channel.name}' back.");
+            Zephy.Logger.Information($"Sending {paginatedMessages.Count} messages back.");
 
             if(data.page == 0 && UserUtilData.IsLoggedIn(data.user))
             {

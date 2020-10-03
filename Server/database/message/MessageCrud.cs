@@ -30,17 +30,17 @@ namespace Server.database.message
             return ReadOnePopulated(x => x._id == id);
         }
 
-        public List<PopulatedMessage> ReadManyPopulatedSorted(Expression<Func<Message, bool>> filter = null)
+        public List<PopulatedMessage> ReadManyPaginated(string channel, int page, int pageSize)
         {
-            if (filter == null) filter = x => true;
-
             return collection
                 .Aggregate()
                 .SortByDescending(x => x.sentAt)
-                .Match(filter)
+                .Match(x => x.channel == channel)
                 .Lookup(UserCrud.COLLECTION_NAME, "author", "_id", "author")
                 .Unwind("author")
                 .As<PopulatedMessage>()
+                .Skip(page * pageSize)
+                .Limit(pageSize)
                 .ToList();
 
         }

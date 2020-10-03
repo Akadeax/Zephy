@@ -41,6 +41,8 @@ namespace Server.database.channel
                     .Select(x => x._id)
                     .ToList();
 
+                channelRoles.Add(RoleCrud.COLLECTION_NAME);
+
                 Channel newChannel = new Channel
                 {
                     _id = ObjectId.GenerateNewId().ToString(),
@@ -64,7 +66,7 @@ namespace Server.database.channel
                         content = Faker.Lorem.Sentence(20),
                         author = author,
                         channel = newChannel._id,
-                        sentAt = rndTimestamp++,
+                        sentAt = rndTimestamp,
                     };
 
                     newChannel.messages.Add(msg._id);
