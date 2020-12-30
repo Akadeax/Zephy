@@ -98,6 +98,7 @@ namespace Server
 
         public void SendPacket(Packet packet, Socket sendTo)
         {
+            Console.WriteLine($"Sending packet to {sendTo.RemoteEndPoint}.");
             sendTo.Send(packet.Buffer);
         }
     }

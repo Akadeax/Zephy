@@ -25,8 +25,8 @@ namespace Packets
             { AccessibleChannelsInfoPacket.TYPE, new AccessibleChannelsInfoPacketHandler() },
             { PopulateMessagesPacket.TYPE, new PopulateMessagesPacketHandler() },
             { MessageSendPacket.TYPE, new MessageSendPacketHandler() },
-            { FetchChannelRolesPacket.TYPE, new FetchChannelRolesPacketHandler() },
-            { ModifyChannelRolesPacket.TYPE, new ModifyChannelRolesPacketHandler() },
+            { FetchRolesPacket.TYPE, new FetchRolesPacketHandler() },
+            { ModifyChannelPacket.TYPE, new ModifyChannelPacketHandler() },
         };
 
         public static int Handle(byte[] packet, Socket clientSocket)
@@ -50,7 +50,6 @@ namespace Packets
             else
             {
                 Zephy.Logger.Information($"Packet Type '{packetType}' could not be identified/handled.");
-                Console.WriteLine($"--{Encoding.UTF8.GetString(packet)}--");
             }
 
 
