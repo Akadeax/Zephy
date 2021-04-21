@@ -1,13 +1,13 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using Server.database.user;
+using server.database.user;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace Server.database.message
+namespace server.database.message
 {
     class MessageCrud : MongoCrud<Message>
     {
@@ -34,8 +34,8 @@ namespace Server.database.message
         {
             return collection
                 .Aggregate()
-                .SortByDescending(x => x.sentAt)
                 .Match(x => x.channel == channel)
+                .SortByDescending(x => x.sentAt)
                 .Lookup(UserCrud.COLLECTION_NAME, "author", "_id", "author")
                 .Unwind("author")
                 .As<PopulatedMessage>()

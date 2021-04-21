@@ -1,17 +1,15 @@
-﻿using Server.database.channel;
-using Server.database.role;
-using Server.database.user;
+﻿using server.database.channel;
+using server.database.user;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Server.database
+namespace server.database
 {
     public class SeederHandler
     {
         public static void Seed(SeederEntriesAmount amounts)
         {
-            new RoleSeeder().Seed(amounts);
             new UserSeeder().Seed(amounts);
             new ChannelMessageSeeder().Seed(amounts);
         }
@@ -19,9 +17,8 @@ namespace Server.database
     
     public class SeederEntriesAmount
     {
-        public int roleSeederAmount = 5;
-        public int userSeederAmount = 5;
-        public int channelSeederAmount = 3;
-        public int messageSeederAmount = 100;
+        public int userSeederAmount;
+        public int channelSeederAmount;
+        public int messageSeederAmount;
     }
 }

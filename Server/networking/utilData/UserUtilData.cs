@@ -1,13 +1,10 @@
-﻿using Server.database.user;
+﻿using server.database.user;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 
-namespace Server.utilityData
+namespace server.utilityData
 {
     public static class UserUtilData
     {
@@ -17,7 +14,7 @@ namespace Server.utilityData
         /// Adds a user to the current list of active users
         /// </summary>
         /// <returns>success</returns>
-        public static bool AddUser(ActiveUser toAdd)
+        public static bool AddActiveUser(ActiveUser toAdd)
         {
             if(loggedInUsers.Values.Any(x => x.userId == toAdd.userId)) return false;
             loggedInUsers[toAdd.clientSocket] = toAdd;
@@ -47,6 +44,7 @@ namespace Server.utilityData
             }
             return false;
         }
+
         public static bool IsLoggedIn(Socket userSocket)
         {
             return loggedInUsers.ContainsKey(userSocket);

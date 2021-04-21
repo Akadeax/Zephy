@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 
-using Server;
+using server;
 
-using Packets.general;
-using Packets.auth;
-using Packets.channel;
-using Packets.message;
+using packets.general;
 using System.Text.Unicode;
 using System.Text;
+using packets.auth;
 
-namespace Packets
+namespace packets
 {
     public static class PacketReceiver
     {
@@ -22,11 +20,6 @@ namespace Packets
         {
             { IdentifyPacket.TYPE, new IdentifyPacketHandler() },
             { LoginAttemptPacket.TYPE, new LoginAttemptPacketHandler() },
-            { AccessibleChannelsInfoPacket.TYPE, new AccessibleChannelsInfoPacketHandler() },
-            { PopulateMessagesPacket.TYPE, new PopulateMessagesPacketHandler() },
-            { MessageSendPacket.TYPE, new MessageSendPacketHandler() },
-            { FetchRolesPacket.TYPE, new FetchRolesPacketHandler() },
-            { ModifyChannelPacket.TYPE, new ModifyChannelPacketHandler() },
         };
 
         public static int Handle(byte[] packet, Socket clientSocket)

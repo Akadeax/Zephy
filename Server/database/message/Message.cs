@@ -1,9 +1,8 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.IdGenerators;
-using Server.database.channel;
-using Server.database.user;
+using server.database.user;
 
-namespace Server.database.message
+namespace server.database.message
 {
     public class MessageBase
     {

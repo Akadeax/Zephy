@@ -1,29 +1,19 @@
 ﻿using MongoDB.Bson;
-using Server.database.message;
-using Server.database.role;
-using Server.database.user;
-using Server.utilities;
+using server.database.message;
+using server.database.user;
+using server.utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-namespace Server.database.channel
+namespace server.database.channel
 {
     class ChannelMessageSeeder : MongoSeeder
     {
         readonly UserCrud userCrud = new UserCrud();
-        readonly RoleCrud roleCrud = new RoleCrud();
         readonly ChannelCrud channelCrud = new ChannelCrud();
         readonly MessageCrud messageCrud = new MessageCrud();
 
-        readonly UserUtil userUtil;
-
         readonly Random rnd = new Random();
-
-        public ChannelMessageSeeder()
-        {
-            userUtil = new UserUtil(userCrud, channelCrud);
-        }
-
 
         public override void Seed(SeederEntriesAmount amount)
         {
@@ -35,30 +25,38 @@ namespace Server.database.channel
 
 
             int messagesPerChannel = (int)((float)amount.messageSeederAmount / amount.channelSeederAmount);
-            for (int c = 0; c < amount.channelSeederAmount; c++)
+
+            List<User> users = userCrud.ReadMany();
+
+            for(int i = 0; i < amount.channelSeederAmount; i++)
             {
-                List<string> channelRoles = RoleSeeder.GetRandomRoles(roleCrud, 2)
-                    .Select(x => x._id)
-                    .ToList();
-
-                channelRoles.Add(RoleCrud.COLLECTION_NAME);
-
                 Channel newChannel = new Channel
                 {
                     _id = ObjectId.GenerateNewId().ToString(),
                     name = Faker.Lorem.Sentence(1),
-                    description = Faker.Lorem.Sentence(1),
-                    roles = channelRoles,
                     messages = new List<string>(),
+                    members = new List<string>(),
                 };
 
-                List<User> canSeeChannel = userUtil.GetUsersThatCanView(newChannel);
+                const int CHANNEL_MEMBER_COUNT = 2;
 
-                for(int m = 0; m < messagesPerChannel; m++)
+                for (int j = 0; j < CHANNEL_MEMBER_COUNT; j++)
                 {
-                    if (canSeeChannel.Count == 0 || canSeeChannel == null) break;
+                    string rndUserId;
+                    do
+                    {
+                        rndUserId = users[rnd.Next(users.Count)]._id;
+                    } while (newChannel.members.Contains(rndUserId));
 
-                    string author = canSeeChannel[rnd.Next(canSeeChannel.Count)]._id;
+                    newChannel.members.Add(rndUserId);
+                }
+
+
+                for (int m = 0; m < messagesPerChannel; m++)
+                {
+                    if (newChannel.members.Count == 0) break;
+
+                    string author = newChannel.members[rnd.Next(newChannel.members.Count)];
                     int rndTimestamp = Util.RandTimestamp();
                     Message msg = new Message
                     {

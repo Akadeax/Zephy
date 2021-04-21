@@ -1,19 +1,20 @@
 ﻿using MongoDB.Bson;
 using Newtonsoft.Json;
-using Packets.channel;
-using Packets.message;
+using packets.auth;
+using packets.channel;
+using packets.message;
 using Serilog;
 using Serilog.Core;
-using Server.database;
-using Server.database.channel;
-using Server.database.message;
-using Server.database.role;
-using Server.database.user;
-using Server.utilities;
-using Server.utilityData;
+using server.database;
+using server.database.channel;
+using server.database.message;
+using server.database.user;
+using server.utilities;
+using server.utilityData;
 using System;
+using System.Linq;
 
-namespace Server
+namespace server
 {
     class Zephy
     {
@@ -33,7 +34,6 @@ namespace Server
             SeederHandler.Seed(new SeederEntriesAmount
             {
                 userSeederAmount = 100,
-                roleSeederAmount = 10,
                 channelSeederAmount = 15,
                 messageSeederAmount = 5000,
             });
@@ -64,7 +64,7 @@ namespace Server
                     Logger.Debug($"Active channels:");
                     foreach (ActiveUser u in UserUtilData.loggedInUsers.Values)
                     {
-                        Logger.Debug($"'{uc.ReadOneById(u.userId).name}': '{cc.ReadOneById(u.activeChannelId).name}'");
+                        Logger.Debug($"'{uc.ReadOneById(u.userId).identifier}': '{cc.ReadOneById(u.activeChannelId).name}'");
                     }
                 }
             }

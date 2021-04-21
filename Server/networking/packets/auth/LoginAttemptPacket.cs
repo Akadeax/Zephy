@@ -1,76 +1,36 @@
-﻿using System;
+﻿using server;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using MongoDB.Bson;
-using Newtonsoft.Json;
-using Server;
-using Server.database.user;
-using Server.utilities;
-using System.Linq;
-using Server.utilityData;
-using Server.database.channel;
 
-namespace Packets.auth
+namespace packets.auth
 {
-    class LoginAttemptPacketData : PacketData
+    public class LoginAttemptPacketData : PacketData
     {
-        public string email, password;
+        public string identifier;
+        public string password;
 
-        public LoginAttemptPacketData(string email, string password)
+        public LoginAttemptPacketData(string identifier, string password)
         {
-            this.email = email;
+            this.identifier = identifier;
             this.password = password;
         }
     }
 
     class LoginAttemptPacketHandler : PacketHandler<LoginAttemptPacket>
     {
-        readonly UserCrud userCrud = new UserCrud();
-
         protected override void Handle(LoginAttemptPacket packet, Socket sender)
         {
             var data = packet.Data;
             if (data == null) return;
 
-            ActiveUser author = UserUtilData.GetUser(sender);
-            if (author != null && UserUtilData.IsLoggedIn(author.clientSocket)) return;
-
-            IPEndPoint ep = sender.LocalEndPoint as IPEndPoint;
-            Zephy.Logger.Information($"Login attempt with '{data.email}' and '{data.password}' from {ep.Address}.");
-
-            HttpStatusCode code = HttpStatusCode.OK;
-            PopulatedUser user = userCrud.ReadOnePopulated(x => x.email == data.email);
-
-            if (user == null || user.password != data.password)
-            {
-                code = HttpStatusCode.Unauthorized;
-                user = null;
-            }
-
-
-            if(user != null)
-            {
-                bool addSuccess = UserUtilData.AddUser(new ActiveUser(user._id, sender));
-                if (!addSuccess)
-                {
-                    code = HttpStatusCode.Unauthorized;
-                }
-            }
-
-            LoginResultPacket retPacket = new LoginResultPacket(new LoginResultPacketData(
-                (int)code,
-                user
-            ));
-
-            Zephy.serverSocket.SendPacket(retPacket, sender);
+            sender.Send(new LoginResponsePacket(new LoginResponsePacketData((int)HttpStatusCode.Unauthorized, null)).Buffer);
         }
     }
 
     class LoginAttemptPacket : Packet
     {
-        public const int TYPE = 2000;
+        public const int TYPE = 2001;
 
         public LoginAttemptPacket(LoginAttemptPacketData data) : base(TYPE, data)
         {
@@ -80,11 +40,10 @@ namespace Packets.auth
         public LoginAttemptPacket(byte[] packet)
             : base(packet) { }
 
-        
         public LoginAttemptPacketData Data
         {
             get { return ReadJsonObject<LoginAttemptPacketData>(); }
-            private set { WriteJsonObject(value); }
+            set { WriteJsonObject(value); }
         }
     }
 }

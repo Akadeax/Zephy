@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Server.database
+namespace server.database
 {
     public abstract class MongoSeeder
     {
