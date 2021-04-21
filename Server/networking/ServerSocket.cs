@@ -1,12 +1,11 @@
-﻿using Packets;
-using Packets.auth;
+﻿using packets;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace Server
+namespace server
 {
 
     class ServerSocket

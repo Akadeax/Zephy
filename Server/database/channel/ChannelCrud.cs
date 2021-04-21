@@ -1,14 +1,14 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using Server.database.message;
-using Server.database.role;
+using server.database.message;
+using server.database.user;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace Server.database.channel
+namespace server.database.channel
 {
     public class ChannelCrud : MongoCrud<Channel>
     {
@@ -32,8 +32,8 @@ namespace Server.database.channel
             return collection
                 .Aggregate()
                 .Match(filter)
-                .Lookup(RoleCrud.COLLECTION_NAME, "roles", "_id", "roles")
                 .Lookup(MessageCrud.COLLECTION_NAME, "messages", "_id", "messages")
+                .Lookup(UserCrud.COLLECTION_NAME, "members", "_id", "members")
                 .As<PopulatedChannel>()
                 .ToList();
         }
@@ -45,7 +45,7 @@ namespace Server.database.channel
             List<Channel> fetchedChannels = ReadMany(filter);
 
             var baseChannels = new List<BaseChannelData>();
-            foreach(Channel channel in fetchedChannels)
+            foreach (Channel channel in fetchedChannels)
             {
                 baseChannels.Add(channel.AsBaseChannelData);
             }

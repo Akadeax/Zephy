@@ -1,26 +1,22 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.IdGenerators;
-using Server.database.message;
-using Server.database.role;
-using System;
+using server.database.message;
+using server.database.user;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Server.database.channel
+namespace server.database.channel
 {
     public class BaseChannelData
     {
         [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         public string _id;
         public string name;
-        public string description;
     }
 
     public class Channel : BaseChannelData
     {
-        public List<string> roles;
         public List<string> messages;
+        public List<string> members;
 
         public BaseChannelData AsBaseChannelData
         {
@@ -30,7 +26,6 @@ namespace Server.database.channel
                 {
                     _id = _id,
                     name = name,
-                    description = description,
                 };
             }
         }
@@ -38,7 +33,7 @@ namespace Server.database.channel
 
     public class PopulatedChannel : BaseChannelData
     {
-        public List<Role> roles;
         public List<Message> messages;
+        public List<User> members;
     }
 }

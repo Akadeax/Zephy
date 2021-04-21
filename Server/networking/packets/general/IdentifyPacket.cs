@@ -1,9 +1,9 @@
-﻿using Server;
+﻿using server;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace Packets.general
+namespace packets.general
 {
     public class IdentifyPacketData : PacketData
     {
@@ -23,17 +23,14 @@ namespace Packets.general
             if (data == null) return;
 
             IPEndPoint ep = sender.LocalEndPoint as IPEndPoint;
-            Zephy.Logger.Information($"Received TCP Identify from {ep.Address} as {data.src}, sending back in 1 second.");
-            Zephy.Logger.Debug("Received!");
-            Thread.Sleep(1000);
-            Zephy.Logger.Debug("Done sleeping!");
+            Zephy.Logger.Information($"Received TCP Identify from {ep.Address} as {data.src}, sending back.");
             Zephy.serverSocket.SendPacket(new IdentifyPacket(new IdentifyPacketData("SERVER")), sender);
         }
     }
 
     class IdentifyPacket : Packet
     {
-        public const int TYPE = 1000;
+        public const int TYPE = 1001;
 
         public IdentifyPacket(IdentifyPacketData data) : base(TYPE, data)
         {

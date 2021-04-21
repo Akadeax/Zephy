@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 
-namespace Server.utilities
+namespace server.utilities
 {
     static class Util
     {
@@ -16,7 +16,7 @@ namespace Server.utilities
         /// </summary>
         public static string ToString<T>(this List<T> list)
         {
-            return String.Join(",", list.ToArray());
+            return string.Join(",", list.ToArray());
         }
 
 
@@ -47,7 +47,7 @@ namespace Server.utilities
 
         public static int RandTimestamp()
         {
-            int utcStart = new DateTime(2020, 1, 1).ToUnixTimestamp();
+            int utcStart = new DateTime(2021, 1, 1).ToUnixTimestamp();
             int utcEnd = DateTime.UtcNow.ToUnixTimestamp();
 
             return rand.Next(utcStart, utcEnd);
