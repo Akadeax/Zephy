@@ -1,17 +1,17 @@
-﻿using server;
-using server.database.channel;
+﻿using Server;
+using Server.Database.Channel;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace packets.channel
+namespace Packets.Channel
 {
     public class CreateChannelResponsePacketData : PacketData
     {
         public int httpStatus;
-        public Channel newChannel;
+        public Server.Database.Channel.Channel newChannel;
 
-        public CreateChannelResponsePacketData(int httpStatus, Channel newChannel)
+        public CreateChannelResponsePacketData(int httpStatus, Server.Database.Channel.Channel newChannel)
         {
             this.httpStatus = httpStatus;
             this.newChannel = newChannel;

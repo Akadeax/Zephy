@@ -1,11 +1,11 @@
-﻿using packets;
+﻿using Packets;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace server
+namespace Server
 {
 
     class ServerSocket
@@ -97,7 +97,7 @@ namespace server
 
         public void SendPacket(Packet packet, Socket sendTo)
         {
-            Console.WriteLine($"Sending packet to {sendTo.RemoteEndPoint}.");
+            Console.WriteLine($"Sending packet of type {packet.PacketType} to {sendTo.RemoteEndPoint}.");
             sendTo.Send(packet.Buffer);
         }
     }

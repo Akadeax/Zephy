@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 
-using server;
+using Server;
 
-using packets.general;
+using Packets.General;
 using System.Text.Unicode;
 using System.Text;
-using packets.auth;
+using Packets.Auth;
 
-namespace packets
+namespace Packets
 {
     public static class PacketReceiver
     {

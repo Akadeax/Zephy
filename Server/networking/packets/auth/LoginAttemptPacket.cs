@@ -1,9 +1,11 @@
-﻿using server;
+﻿using Server;
+using Server.Database.User;
+using Server.UtilData;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace packets.auth
+namespace Packets.Auth
 {
     public class LoginAttemptPacketData : PacketData
     {
@@ -19,14 +21,50 @@ namespace packets.auth
 
     class LoginAttemptPacketHandler : PacketHandler<LoginAttemptPacket>
     {
+        readonly UserCrud userCrud = new UserCrud();
+
         protected override void Handle(LoginAttemptPacket packet, Socket sender)
         {
             var data = packet.Data;
             if (data == null) return;
 
-            sender.Send(new LoginResponsePacket(new LoginResponsePacketData((int)HttpStatusCode.Unauthorized, null)).Buffer);
+            if(UserUtilData.IsLoggedIn(sender))
+            {
+                SendError(HttpStatusCode.Forbidden, sender);
+
+                return;
+            }
+
+            User user = userCrud.ReadOne(x => x.identifier == data.identifier);
+            if(user == null || user.password != data.password)
+            {
+                SendError(HttpStatusCode.Unauthorized, sender);
+                return;
+            }
+
+            bool addSuccess = UserUtilData.AddActiveUser(new ActiveUser(user._id, sender));
+            if(!addSuccess)
+            {
+                SendError(HttpStatusCode.Forbidden, sender);
+                return;
+            }
+
+            var successResponse = new LoginResponsePacket(new LoginResponsePacketData(
+                (int)HttpStatusCode.OK, user
+            ));
+            Zephy.serverSocket.SendPacket(successResponse, sender);
+        }
+
+
+        private void SendError(HttpStatusCode code, Socket sender)
+        {
+            var response = new LoginResponsePacket(new LoginResponsePacketData(
+                    (int)code, null
+            ));
+            Zephy.serverSocket.SendPacket(response, sender);
         }
     }
+
 
     class LoginAttemptPacket : Packet
     {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace server.database
+namespace Server.Database
 {
     public abstract class MongoCrud<T>
     {

@@ -1,10 +1,10 @@
-﻿using server.database.channel;
-using server.database.user;
+﻿using Server.Database.Channel;
+using Server.Database.User;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace server.database
+namespace Server.Database
 {
     public class SeederHandler
     {

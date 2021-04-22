@@ -1,14 +1,14 @@
-﻿using server.database.user;
+﻿using Server.Database.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 
-namespace server.utilityData
+namespace Server.UtilData
 {
     public static class UserUtilData
     {
-        public static readonly Dictionary<Socket, ActiveUser> loggedInUsers = new Dictionary<Socket, ActiveUser>();
+        public static readonly List<ActiveUser> loggedInUsers = new List<ActiveUser>();
 
         /// <summary>
         /// Adds a user to the current list of active users
@@ -16,29 +16,39 @@ namespace server.utilityData
         /// <returns>success</returns>
         public static bool AddActiveUser(ActiveUser toAdd)
         {
-            if(loggedInUsers.Values.Any(x => x.userId == toAdd.userId)) return false;
-            loggedInUsers[toAdd.clientSocket] = toAdd;
+            if (loggedInUsers.Any(x => x.userId == toAdd.userId)) return false;
+            loggedInUsers.Add(toAdd);
+            Zephy.Logger.Information($"Added {toAdd.userId} to active users.");
             return true;
         }
-        public static void RemoveUser(Socket socket)
+
+        /// <summary>
+        /// Removes a user from the current list of active users
+        /// </summary>
+        /// <returns>whether user was in list</returns>
+        public static bool RemoveUser(Socket socket)
         {
-            loggedInUsers.Remove(socket);
+            ActiveUser user = loggedInUsers.First(x => x.clientSocket == socket);
+            if (user == null) return false;
+            loggedInUsers.Remove(user);
+            Zephy.Logger.Information($"Removed {user.userId} from active users.");
+            return true;
         }
 
         public static ActiveUser GetUser(string id)
         {
-            return loggedInUsers.Values.FirstOrDefault(x => x.userId == id);
+            return loggedInUsers.FirstOrDefault(x => x.userId == id);
         }
 
         public static ActiveUser GetUser(Socket clientSocket)
         {
-            return loggedInUsers.Values.FirstOrDefault(x => x.clientSocket == clientSocket);
+            return loggedInUsers.FirstOrDefault(x => x.clientSocket == clientSocket);
         }
 
         public static bool IsLoggedIn(string userId)
         {
             if (userId == null) return false;
-            foreach(var user in loggedInUsers.Values)
+            foreach(var user in loggedInUsers)
             {
                 if (user.userId == userId) return true;
             }
@@ -47,12 +57,12 @@ namespace server.utilityData
 
         public static bool IsLoggedIn(Socket userSocket)
         {
-            return loggedInUsers.ContainsKey(userSocket);
+            return loggedInUsers.Any(x => x.clientSocket == userSocket);
         }
 
         public static List<ActiveUser> GetActiveInChannel(string channelId)
         {
-            return loggedInUsers.Values.Where(x => x.activeChannelId == channelId).ToList();
+            return loggedInUsers.Where(x => x.activeChannelId == channelId).ToList();
         }
     }
 

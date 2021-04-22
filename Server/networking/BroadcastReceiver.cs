@@ -1,5 +1,5 @@
-﻿using packets;
-using packets.general;
+﻿using Packets;
+using Packets.General;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace server
+namespace Server
 {
     class BroadcastReceiver
     {
