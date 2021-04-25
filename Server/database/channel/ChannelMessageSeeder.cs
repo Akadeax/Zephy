@@ -1,11 +1,11 @@
 ﻿using MongoDB.Bson;
-using server.database.message;
-using server.database.user;
-using server.utilities;
+using Server.Database.Message;
+using Server.Database.User;
+using Server.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-namespace server.database.channel
+namespace Server.Database.Channel
 {
     class ChannelMessageSeeder : MongoSeeder
     {
@@ -26,7 +26,7 @@ namespace server.database.channel
 
             int messagesPerChannel = (int)((float)amount.messageSeederAmount / amount.channelSeederAmount);
 
-            List<User> users = userCrud.ReadMany();
+            List<User.User> users = userCrud.ReadMany();
 
             for(int i = 0; i < amount.channelSeederAmount; i++)
             {
@@ -57,8 +57,8 @@ namespace server.database.channel
                     if (newChannel.members.Count == 0) break;
 
                     string author = newChannel.members[rnd.Next(newChannel.members.Count)];
-                    int rndTimestamp = Util.RandTimestamp();
-                    Message msg = new Message
+                    int rndTimestamp = Util.Util.RandTimestamp();
+                    Message.Message msg = new Message.Message
                     {
                         _id = ObjectId.GenerateNewId().ToString(),
                         content = Faker.Lorem.Sentence(20),

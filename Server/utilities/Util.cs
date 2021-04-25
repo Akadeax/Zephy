@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 
-namespace server.utilities
+namespace Server.Util
 {
     static class Util
     {

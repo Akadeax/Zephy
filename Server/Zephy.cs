@@ -1,20 +1,19 @@
 ﻿using MongoDB.Bson;
 using Newtonsoft.Json;
-using packets.auth;
-using packets.channel;
-using packets.message;
+using Packets.Auth;
+using Packets.Channel;
+using Packets.Message;
 using Serilog;
 using Serilog.Core;
-using server.database;
-using server.database.channel;
-using server.database.message;
-using server.database.user;
-using server.utilities;
-using server.utilityData;
+using Server.Database;
+using Server.Database.Channel;
+using Server.Database.Message;
+using Server.Database.User;
+using Server.Util;
 using System;
 using System.Linq;
 
-namespace server
+namespace Server
 {
     class Zephy
     {
@@ -54,7 +53,6 @@ namespace server
                 if (cmd == "clear") Console.Clear();
                 else if (cmd == "q")
                 {
-                    serverSocket.CloseAllSockets();
                     break;
                 }
                 else if (cmd == "dbg")
@@ -62,7 +60,7 @@ namespace server
                     UserCrud uc = new UserCrud();
                     ChannelCrud cc = new ChannelCrud();
                     Logger.Debug($"Active channels:");
-                    foreach (ActiveUser u in UserUtilData.loggedInUsers.Values)
+                    foreach (ActiveUser u in ActiveUsers.loggedInUsers)
                     {
                         Logger.Debug($"'{uc.ReadOneById(u.userId).identifier}': '{cc.ReadOneById(u.activeChannelId).name}'");
                     }

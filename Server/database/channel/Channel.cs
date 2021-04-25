@@ -1,10 +1,10 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.IdGenerators;
-using server.database.message;
-using server.database.user;
+using Server.Database.Message;
+using Server.Database.User;
 using System.Collections.Generic;
 
-namespace server.database.channel
+namespace Server.Database.Channel
 {
     public class BaseChannelData
     {
@@ -33,7 +33,7 @@ namespace server.database.channel
 
     public class PopulatedChannel : BaseChannelData
     {
-        public List<Message> messages;
-        public List<User> members;
+        public List<Message.Message> messages;
+        public List<User.User> members;
     }
 }

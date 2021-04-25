@@ -4,7 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace packets
+namespace Packets
 {
     /* Top class makes it usable in contexts like 'List<PacketHandler>' without
        having to provide a generic type, which is needed in e.g. PacketReceiver.cs */

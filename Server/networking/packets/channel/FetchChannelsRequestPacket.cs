@@ -1,9 +1,9 @@
-﻿using server;
+﻿using Server;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace packets.channel
+namespace Packets.Channel
 {
     public class FetchChannelsRequestPacketData : PacketData
     {

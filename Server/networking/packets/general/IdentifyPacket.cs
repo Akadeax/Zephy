@@ -1,9 +1,9 @@
-﻿using server;
+﻿using Server;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace packets.general
+namespace Packets.General
 {
     public class IdentifyPacketData : PacketData
     {

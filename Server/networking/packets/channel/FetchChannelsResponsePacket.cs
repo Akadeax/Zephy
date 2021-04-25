@@ -1,11 +1,11 @@
-﻿using server;
-using server.database.channel;
+﻿using Server;
+using Server.Database.Channel;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace packets.channel
+namespace Packets.Channel
 {
     public class FetchChannelsResponsePacketData : PacketData
     {

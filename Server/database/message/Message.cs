@@ -1,8 +1,8 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.IdGenerators;
-using server.database.user;
+using Server.Database.User;
 
-namespace server.database.message
+namespace Server.Database.Message
 {
     public class MessageBase
     {
@@ -20,6 +20,6 @@ namespace server.database.message
 
     public class PopulatedMessage : MessageBase
     {
-        public User author;
+        public User.User author;
     }
 }

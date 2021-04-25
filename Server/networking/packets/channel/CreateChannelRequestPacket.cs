@@ -1,10 +1,10 @@
-﻿using server;
+﻿using Server;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace packets.channel
+namespace Packets.Channel
 {
     public class CreateChannelRequestPacketData : PacketData
     {

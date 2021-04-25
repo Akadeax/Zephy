@@ -6,7 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace server.database.user
+namespace Server.Database.User
 {
     public class UserCrud : MongoCrud<User>
     {

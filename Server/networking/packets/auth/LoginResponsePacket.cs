@@ -1,10 +1,10 @@
-﻿using server;
-using server.database.user;
+﻿using Server;
+using Server.Database.User;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace packets.auth
+namespace Packets.Auth
 {
     public class LoginResponsePacketData : PacketData
     {

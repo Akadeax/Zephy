@@ -1,9 +1,9 @@
-﻿using server;
+﻿using Server;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace packets.message
+namespace Packets.Message
 {
     public class SendMessageRequestPacketData : PacketData
     {
