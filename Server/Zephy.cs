@@ -10,7 +10,6 @@ using Server.Database.Channel;
 using Server.Database.Message;
 using Server.Database.User;
 using Server.Util;
-using Server.UtilData;
 using System;
 using System.Linq;
 
@@ -54,7 +53,6 @@ namespace Server
                 if (cmd == "clear") Console.Clear();
                 else if (cmd == "q")
                 {
-                    serverSocket.CloseAllSockets();
                     break;
                 }
                 else if (cmd == "dbg")
@@ -62,7 +60,7 @@ namespace Server
                     UserCrud uc = new UserCrud();
                     ChannelCrud cc = new ChannelCrud();
                     Logger.Debug($"Active channels:");
-                    foreach (ActiveUser u in UserUtilData.loggedInUsers)
+                    foreach (ActiveUser u in ActiveUsers.loggedInUsers)
                     {
                         Logger.Debug($"'{uc.ReadOneById(u.userId).identifier}': '{cc.ReadOneById(u.activeChannelId).name}'");
                     }

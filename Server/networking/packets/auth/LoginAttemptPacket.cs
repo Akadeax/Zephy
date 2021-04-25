@@ -1,6 +1,5 @@
 ﻿using Server;
 using Server.Database.User;
-using Server.UtilData;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -28,7 +27,7 @@ namespace Packets.Auth
             var data = packet.Data;
             if (data == null) return;
 
-            if(UserUtilData.IsLoggedIn(sender))
+            if(ActiveUsers.IsLoggedIn(sender))
             {
                 SendError(HttpStatusCode.Forbidden, sender);
 
@@ -42,7 +41,7 @@ namespace Packets.Auth
                 return;
             }
 
-            bool addSuccess = UserUtilData.AddActiveUser(new ActiveUser(user._id, sender));
+            bool addSuccess = ActiveUsers.AddActiveUser(new ActiveUser(user._id, sender));
             if(!addSuccess)
             {
                 SendError(HttpStatusCode.Forbidden, sender);

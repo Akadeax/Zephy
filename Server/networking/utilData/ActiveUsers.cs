@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 
-namespace Server.UtilData
+namespace Server
 {
-    public static class UserUtilData
+    public static class ActiveUsers
     {
         public static readonly List<ActiveUser> loggedInUsers = new List<ActiveUser>();
 
@@ -31,7 +31,6 @@ namespace Server.UtilData
             ActiveUser user = loggedInUsers.First(x => x.clientSocket == socket);
             if (user == null) return false;
             loggedInUsers.Remove(user);
-            Zephy.Logger.Information($"Removed {user.userId} from active users.");
             return true;
         }
 

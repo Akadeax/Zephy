@@ -11,7 +11,6 @@ namespace Server
     class ServerSocket
     {
         public readonly Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        public readonly List<Socket> clientSockets = new List<Socket>();
         const int BUFFER_SIZE = 4096;
         private readonly byte[] buffer = new byte[BUFFER_SIZE];
         int port;
@@ -34,63 +33,51 @@ namespace Server
             Zephy.Logger.Information("Successfully set up TCP Listener.");
         }
 
-        /// <summary>
-        /// Close all connected client (we do not need to shutdown the server socket as its connections
-        /// are already closed with the clients).
-        /// </summary>
-        public void CloseAllSockets()
+        private void AcceptCallback(IAsyncResult res)
         {
-            foreach (Socket socket in clientSockets)
-            {
-                socket.Shutdown(SocketShutdown.Both);
-                socket.Close();
-            }
-
-            serverSocket.Close();
-        }
-
-        private void AcceptCallback(IAsyncResult AR)
-        {
-            Socket socket;
-
             try
             {
-                socket = serverSocket.EndAccept(AR);
-            }
-            catch (ObjectDisposedException) // I cannot seem to avoid this (on exit when properly closing sockets)
-            {
-                return;
-            }
+                Socket socket;
 
-            clientSockets.Add(socket);
-            socket.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, socket);
-            Zephy.Logger.Information($"Client from '{socket.LocalEndPoint}' Connected, Waiting for requests...");
-            serverSocket.BeginAccept(AcceptCallback, null);
+                socket = serverSocket.EndAccept(res);
+
+                socket.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, socket);
+                Zephy.Logger.Information($"Client from '{socket.LocalEndPoint}' Connected, Waiting for requests...");
+
+                serverSocket.BeginAccept(AcceptCallback, null);
+            }
+            catch(Exception)
+            {
+                Zephy.Logger.Error("An error has occured when accepting a socket.");
+            }
         }
 
-        private void ReceiveCallback(IAsyncResult AR)
+        private void ReceiveCallback(IAsyncResult res)
         {
-            Socket current = (Socket)AR.AsyncState;
+            Socket current = (Socket)res.AsyncState;
             int received;
 
-            received = current.EndReceive(AR, out SocketError err);
+            received = current.EndReceive(res, out SocketError err);
 
+            // = forceful close
             if (err != SocketError.Success)
             {
-                Zephy.Logger.Information($"Client '{current.LocalEndPoint}' forcefully disconnected!");
-                current.Close();
-                clientSockets.Remove(current);
+                DisconnectHandler.OnDisconnect(current);
                 return;
 
             }
 
             byte[] recBuf = new byte[received];
             Array.Copy(buffer, recBuf, received);
-            string text = Encoding.UTF8.GetString(recBuf);
 
-            // Handle the packet
-            int res = PacketReceiver.Handle(recBuf, current);
-            if (res == PacketReceiver.SHUTDOWN) return;
+            // 0 length buffer = graceful close
+            if (recBuf.Length == 0)
+            {
+                DisconnectHandler.OnDisconnect(current);
+                return;
+            }
+
+            PacketReceiver.Handle(recBuf, current);
 
             current.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, current);
         }
