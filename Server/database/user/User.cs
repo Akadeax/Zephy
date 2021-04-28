@@ -8,7 +8,7 @@ namespace Server.Database.User
         [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         public string _id;
         public string fullName;
-
+        public string status;
         public string identifier;
         public string password;
     }

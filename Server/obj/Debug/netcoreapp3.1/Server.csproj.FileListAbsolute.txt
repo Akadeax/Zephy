@@ -65,5 +65,5 @@ C:\dev\Zephy\Server\obj\Debug\netcoreapp3.1\Server.genruntimeconfig.cache
 D:\dev\Programming\CS\VanillaCS\Zephy\Server\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
 D:\dev\Programming\CS\VanillaCS\Zephy\Server\bin\Debug\netcoreapp3.1\Serilog.dll
 D:\dev\Programming\CS\VanillaCS\Zephy\Server\bin\Debug\netcoreapp3.1\Serilog.Sinks.Console.dll
-D:\dev\Programming\CS\VanillaCS\Zephy\Server\obj\Debug\netcoreapp3.1\Server.csproj.CoreCompileInputs.cache
 D:\dev\Programming\CS\VanillaCS\Zephy\Server\obj\Debug\netcoreapp3.1\Server.genruntimeconfig.cache
+D:\dev\Programming\CS\VanillaCS\Zephy\Server\obj\Debug\netcoreapp3.1\Server.csproj.CoreCompileInputs.cache

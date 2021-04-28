@@ -24,7 +24,9 @@ namespace Server.Database.User
                 {
                     identifier = name.Replace(" ", "_").ToLower(),
                     fullName = name,
-                    password = "test",
+                    // sha512 hash of "test" with salt "zephy"
+                    password = "$6$zephy$SBy0yf3Se8dxEXxzsBS1USPE3uWhTKzAZeRQo2xY87qSSha5X7oiJJEU64/wxsk9SJIwNKA/UDNy3zX.GJnjR1",
+                    status = Faker.Company.CatchPhrase(),
                 });
             }
         }

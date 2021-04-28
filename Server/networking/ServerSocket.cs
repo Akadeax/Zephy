@@ -84,7 +84,7 @@ namespace Server
 
         public void SendPacket(Packet packet, Socket sendTo)
         {
-            Console.WriteLine($"Sending packet of type {packet.PacketType} to {sendTo.RemoteEndPoint}.");
+            Zephy.Logger.Information($"Sending packet of type {packet.PacketType} to {sendTo.RemoteEndPoint}.");
             sendTo.Send(packet.Buffer);
         }
     }
