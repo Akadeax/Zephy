@@ -1,4 +1,5 @@
 ﻿using Server;
+using Server.Database.Channel;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -7,22 +8,28 @@ namespace Packets.Channel
 {
     public class FetchChannelsRequestPacketData : PacketData
     {
-        public string forUser;
-
-        public FetchChannelsRequestPacketData(string forUser)
+        public string search;
+        public FetchChannelsRequestPacketData(string search)
         {
-            this.forUser = forUser;
+            this.search = search;
         }
     }
 
     class FetchChannelsRequestPacketHandler : PacketHandler<FetchChannelsRequestPacket>
     {
+        readonly ChannelCrud channelCrud = new ChannelCrud();
+
         protected override void Handle(FetchChannelsRequestPacket packet, Socket sender)
         {
             var data = packet.Data;
             if (data == null) return;
 
+            var response = new FetchChannelsResponsePacket(new FetchChannelsResponsePacketData(
+                (int)HttpStatusCode.OK,
+                channelCrud.ReadManyBase(x => x.name.ToLower().Contains(data.search.ToLower()))
+            ));
 
+            Zephy.serverSocket.SendPacket(response, sender);
         }
     }
 
