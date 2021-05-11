@@ -27,7 +27,19 @@ namespace Packets.Auth
             var data = packet.Data;
             if (data == null) return;
 
-            if(ActiveUsers.IsLoggedIn(sender))
+            // TODO: REMOVE
+            #region DEBUG
+            if(data.identifier == "test")
+            {
+                var debugRe = new LoginResponsePacket(new LoginResponsePacketData(
+                    (int)HttpStatusCode.OK, userCrud.ReadOne()
+                ));
+                Zephy.serverSocket.SendPacket(debugRe, sender);
+                return;
+            }
+            #endregion
+
+            if (ActiveUsers.IsLoggedIn(sender))
             {
                 SendError(HttpStatusCode.Forbidden, sender);
 
