@@ -1,5 +1,6 @@
 ﻿using Server;
 using Server.Database.User;
+using Server.Networking;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -47,6 +48,8 @@ namespace Packets.Auth
                 SendError(HttpStatusCode.Forbidden, sender);
                 return;
             }
+
+            Sessions.AddSession(user._id);
 
             var successResponse = new LoginResponsePacket(new LoginResponsePacketData(
                 (int)HttpStatusCode.OK, user
