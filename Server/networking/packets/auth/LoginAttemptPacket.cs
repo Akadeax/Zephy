@@ -59,10 +59,10 @@ namespace Packets.Auth
                 return;
             }
 
-            Sessions.AddSession(user._id);
+            Session session = Sessions.AddSession(user._id);
 
             var successResponse = new LoginResponsePacket(new LoginResponsePacketData(
-                (int)HttpStatusCode.OK, user
+                (int)HttpStatusCode.OK, user, session.accessToken
             ));
             Zephy.serverSocket.SendPacket(successResponse, sender);
         }
@@ -71,7 +71,7 @@ namespace Packets.Auth
         private void SendError(HttpStatusCode code, Socket sender)
         {
             var response = new LoginResponsePacket(new LoginResponsePacketData(
-                    (int)code, null
+                    (int)code, null, null
             ));
             Zephy.serverSocket.SendPacket(response, sender);
         }

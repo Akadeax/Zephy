@@ -12,9 +12,9 @@ namespace Server.Networking
 
     public static class Sessions
     {
-        private static List<Session> sessions;
+        private static readonly List<Session> sessions = new List<Session>();
 
-        public static void AddSession(string userId)
+        public static Session AddSession(string userId)
         {
             MD5 md5 = MD5.Create();
 
@@ -25,6 +25,7 @@ namespace Server.Networking
             );
 
             sessions.Add(newSession);
+            return newSession;
         }
 
         public static SessionState GetState(string userId)
