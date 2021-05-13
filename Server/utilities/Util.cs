@@ -41,7 +41,6 @@ namespace Server.Util
             };
 
             var jsonElement = JsonSerializer.Deserialize<JsonElement>(unPrettyJson);
-
             return JsonSerializer.Serialize(jsonElement, options);
         }
 

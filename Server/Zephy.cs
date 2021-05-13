@@ -1,17 +1,7 @@
-﻿using MongoDB.Bson;
-using Newtonsoft.Json;
-using Packets.Auth;
-using Packets.Channel;
-using Packets.Message;
-using Serilog;
+﻿using Serilog;
 using Serilog.Core;
 using Server.Database;
-using Server.Database.Channel;
-using Server.Database.Message;
-using Server.Database.User;
-using Server.Util;
 using System;
-using System.Linq;
 
 namespace Server
 {
@@ -32,8 +22,8 @@ namespace Server
             #region Seeding
             SeederHandler.Seed(new SeederEntriesAmount
             {
-                userSeederAmount = 100,
-                channelSeederAmount = 15,
+                userSeederAmount = 20,
+                channelSeederAmount = 400,
                 messageSeederAmount = 5000,
             });
             #endregion
@@ -54,16 +44,6 @@ namespace Server
                 else if (cmd == "q")
                 {
                     break;
-                }
-                else if (cmd == "dbg")
-                {
-                    UserCrud uc = new UserCrud();
-                    ChannelCrud cc = new ChannelCrud();
-                    Logger.Debug($"Active channels:");
-                    foreach (ActiveUser u in ActiveUsers.loggedInUsers)
-                    {
-                        Logger.Debug($"'{uc.ReadOneById(u.userId).identifier}': '{cc.ReadOneById(u.activeChannelId).name}'");
-                    }
                 }
             }
             #endregion

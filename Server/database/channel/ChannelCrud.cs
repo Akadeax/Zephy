@@ -44,10 +44,13 @@ namespace Server.Database.Channel
 
             List<Channel> fetchedChannels = ReadMany(filter);
 
+            ChannelCrud channelCrud = new ChannelCrud();
+
             var baseChannels = new List<BaseChannelData>();
             foreach (Channel channel in fetchedChannels)
             {
-                baseChannels.Add(channel.AsBaseChannelData);
+                PopulatedChannel popChannel = channelCrud.ReadOnePopulated(x => x._id == channel._id);
+                baseChannels.Add(channel.ToBaseChannelData(popChannel.messages[0]));
             }
 
             return baseChannels;

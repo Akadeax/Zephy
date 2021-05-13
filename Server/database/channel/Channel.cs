@@ -6,28 +6,31 @@ using System.Collections.Generic;
 
 namespace Server.Database.Channel
 {
-    public class BaseChannelData
+    public class BaseChannel
     {
         [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         public string _id;
         public string name;
     }
 
-    public class Channel : BaseChannelData
+    public class BaseChannelData : BaseChannel
+    {
+        public Message.Message lastMessage;
+    }
+
+    public class Channel : BaseChannel
     {
         public List<string> messages;
         public List<string> members;
 
-        public BaseChannelData AsBaseChannelData
+        public BaseChannelData ToBaseChannelData(Message.Message lastMessage)
         {
-            get
+            return new BaseChannelData
             {
-                return new BaseChannelData
-                {
-                    _id = _id,
-                    name = name,
-                };
-            }
+                _id = _id,
+                name = name,
+                lastMessage = lastMessage
+            };
         }
     }
 

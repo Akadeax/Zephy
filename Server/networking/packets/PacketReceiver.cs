@@ -9,6 +9,7 @@ using Packets.General;
 using System.Text.Unicode;
 using System.Text;
 using Packets.Auth;
+using Packets.Channel;
 
 namespace Packets
 {
@@ -20,6 +21,7 @@ namespace Packets
         {
             { IdentifyPacket.TYPE, new IdentifyPacketHandler() },
             { LoginAttemptPacket.TYPE, new LoginAttemptPacketHandler() },
+            { FetchChannelsRequestPacket.TYPE, new FetchChannelsRequestPacketHandler() },
         };
 
         public static void Handle(byte[] packet, Socket clientSocket)

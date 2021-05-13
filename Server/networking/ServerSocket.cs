@@ -64,7 +64,6 @@ namespace Server
             {
                 DisconnectHandler.OnDisconnect(current);
                 return;
-
             }
 
             byte[] recBuf = new byte[received];
@@ -85,7 +84,14 @@ namespace Server
         public void SendPacket(Packet packet, Socket sendTo)
         {
             Zephy.Logger.Information($"Sending packet of type {packet.PacketType} to {sendTo.RemoteEndPoint}.");
-            sendTo.Send(packet.Buffer);
+            try
+            {
+                sendTo.Send(packet.Buffer);
+            }
+            catch(Exception)
+            {
+                Zephy.Logger.Error("Fatal error: failed to send Packet");
+            }
         }
     }
 }
