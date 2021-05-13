@@ -33,7 +33,7 @@ namespace Server.Database.Channel
                 Channel newChannel = new Channel
                 {
                     _id = ObjectId.GenerateNewId().ToString(),
-                    name = Faker.Lorem.Sentence(1),
+                    name = Faker.Internet.DomainWord(),
                     messages = new List<string>(),
                     members = new List<string>(),
                 };

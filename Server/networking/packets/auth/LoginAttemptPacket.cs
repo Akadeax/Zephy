@@ -31,11 +31,9 @@ namespace Packets.Auth
             #region DEBUG
             if(data.identifier == "test")
             {
-                var debugRe = new LoginResponsePacket(new LoginResponsePacketData(
-                    (int)HttpStatusCode.OK, userCrud.ReadOne()
-                ));
-                Zephy.serverSocket.SendPacket(debugRe, sender);
-                return;
+                User dbgUser = userCrud.ReadOne();
+                data.identifier = dbgUser.identifier;
+                data.password = dbgUser.password;
             }
             #endregion
 
