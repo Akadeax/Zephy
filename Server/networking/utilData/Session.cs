@@ -2,46 +2,69 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Security.Cryptography;
+using System.Linq;
 
 namespace Server.Networking
 {
     public enum SessionState
     {
-        Valid, Expired, NotFound
+        Valid, Invalid
     }
 
     public static class Sessions
     {
         private static readonly List<Session> sessions = new List<Session>();
 
-        public static Session AddSession(string userId)
+        public static Session CreateSession(string userId)
         {
-            MD5 md5 = MD5.Create();
-
+            Zephy.Logger.Information($"Created new session for {userId}!");
             var newSession = new Session(
                 userId,
-                Encoding.UTF8.GetString(md5.ComputeHash(Encoding.UTF8.GetBytes(userId))),
-                DateTime.UtcNow.AddDays(10)
+                DateTime.UtcNow.AddDays(28)
             );
 
             sessions.Add(newSession);
             return newSession;
         }
 
-        public static SessionState GetState(string userId)
+        #region GetState
+        public static SessionState GetStateById(string userId)
         {
-            Session session = sessions.Find(x => x.userId == userId);
-            if (session == null) return SessionState.NotFound;
-            if (session.expirationDate > DateTime.UtcNow)
+            return GetState(GetSessionById(userId));
+        }
+
+        public static SessionState GetStateByToken(string token)
+        {
+            return GetState(GetSessionByToken(token));
+        }
+
+        public static SessionState GetState(Session session)
+        {
+            if (session == null) return SessionState.Invalid;
+
+            if (DateTime.UtcNow >= session.expirationDate)
             {
                 sessions.Remove(session);
-                return SessionState.Expired;
+                CreateSession(session.userId);
+                return SessionState.Invalid;
             }
             else
             {
                 return SessionState.Valid;
             }
         }
+        #endregion
+
+        #region GetSession
+        public static Session GetSessionById(string userId)
+        {
+            return sessions.Find(x => x.userId == userId);
+        }
+        public static Session GetSessionByToken(string accessToken)
+        {
+            return sessions.Find(x => x.accessToken == accessToken);
+        }
+        #endregion
     }
 
     public class Session
@@ -50,11 +73,22 @@ namespace Server.Networking
         public string accessToken;
         public DateTime expirationDate;
 
-        public Session(string userId, string accessToken, DateTime expirationDate)
+        public Session(string userId, DateTime expirationDate)
         {
             this.userId = userId;
-            this.accessToken = accessToken;
             this.expirationDate = expirationDate;
+            GenerateToken();
+        }
+
+        private void GenerateToken()
+        {
+            var allChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
+            var random = new Random();
+            var resultToken = new string(
+               Enumerable.Repeat(allChar, 16)
+               .Select(token => token[random.Next(token.Length)]).ToArray());
+
+            accessToken = resultToken.ToString();
         }
     }
 }

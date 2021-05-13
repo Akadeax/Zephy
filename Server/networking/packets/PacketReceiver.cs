@@ -22,6 +22,7 @@ namespace Packets
             { IdentifyPacket.TYPE, new IdentifyPacketHandler() },
             { LoginAttemptPacket.TYPE, new LoginAttemptPacketHandler() },
             { FetchChannelsRequestPacket.TYPE, new FetchChannelsRequestPacketHandler() },
+            { ConfirmSessionRequestPacket.TYPE, new ConfirmSessionRequestPacketHandler() },
         };
 
         public static void Handle(byte[] packet, Socket clientSocket)

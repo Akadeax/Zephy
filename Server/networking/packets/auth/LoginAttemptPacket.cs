@@ -59,7 +59,15 @@ namespace Packets.Auth
                 return;
             }
 
-            Session session = Sessions.AddSession(user._id);
+            Session session;
+            if(Sessions.GetStateById(user._id) == SessionState.Invalid)
+            {
+                session = Sessions.CreateSession(user._id);
+            }
+            else
+            {
+                session = Sessions.GetSessionById(user._id);
+            }
 
             var successResponse = new LoginResponsePacket(new LoginResponsePacketData(
                 (int)HttpStatusCode.OK, user, session.accessToken

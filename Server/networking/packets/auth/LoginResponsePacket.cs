@@ -10,13 +10,13 @@ namespace Packets.Auth
     {
         public int httpStatus;
         public User user;
-        public string sessionToken;
+        public string accessToken;
 
         public LoginResponsePacketData(int httpStatus, User user, string sessionToken)
         {
             this.httpStatus = httpStatus;
             this.user = user;
-            this.sessionToken = sessionToken;
+            this.accessToken = sessionToken;
         }
     }
 
