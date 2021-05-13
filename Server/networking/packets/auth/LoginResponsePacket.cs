@@ -12,11 +12,11 @@ namespace Packets.Auth
         public User user;
         public string accessToken;
 
-        public LoginResponsePacketData(int httpStatus, User user, string sessionToken)
+        public LoginResponsePacketData(int httpStatus, User user, string accessToken)
         {
             this.httpStatus = httpStatus;
             this.user = user;
-            this.accessToken = sessionToken;
+            this.accessToken = accessToken;
         }
     }
 

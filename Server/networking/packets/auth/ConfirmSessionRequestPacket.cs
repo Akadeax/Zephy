@@ -41,6 +41,7 @@ namespace Packets.Auth
                 SendError(HttpStatusCode.Unauthorized, sender);
                 return;
             }
+
             // Add to active users
             bool addSuccess = ActiveUsers.AddActiveUser(new ActiveUser(user._id, sender));
             if (!addSuccess)
@@ -48,6 +49,7 @@ namespace Packets.Auth
                 SendError(HttpStatusCode.Forbidden, sender);
                 return;
             }
+
             var successResponse = new ConfirmSessionResponsePacket(new ConfirmSessionResponsePacketData(
                 (int)HttpStatusCode.OK,
                 user

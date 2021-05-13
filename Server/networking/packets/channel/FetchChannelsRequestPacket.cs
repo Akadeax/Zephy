@@ -45,7 +45,6 @@ namespace Packets.Channel
                 (int)HttpStatusCode.OK,
                 channels
             ));
-
             Zephy.serverSocket.SendPacket(response, sender);
         }
 
