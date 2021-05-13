@@ -28,7 +28,17 @@ namespace Packets.Auth
             var data = packet.Data;
             if (data == null) return;
 
-            if(ActiveUsers.IsLoggedIn(sender))
+            // TODO: REMOVE
+            #region DEBUG
+            if(data.identifier == "test")
+            {
+                User dbgUser = userCrud.ReadOne();
+                data.identifier = dbgUser.identifier;
+                data.password = dbgUser.password;
+            }
+            #endregion
+
+            if (ActiveUsers.IsLoggedIn(sender))
             {
                 SendError(HttpStatusCode.Forbidden, sender);
 

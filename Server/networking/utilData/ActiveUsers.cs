@@ -58,19 +58,12 @@ namespace Server
         {
             return loggedInUsers.Any(x => x.clientSocket == userSocket);
         }
-
-        public static List<ActiveUser> GetActiveInChannel(string channelId)
-        {
-            return loggedInUsers.Where(x => x.activeChannelId == channelId).ToList();
-        }
     }
 
     public class ActiveUser
     {
         public string userId;
         public Socket clientSocket;
-
-        public string activeChannelId = "";
 
         public ActiveUser(string userId, Socket clientSocket)
         {
