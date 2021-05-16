@@ -1,28 +1,26 @@
-﻿using System;
+﻿using Server;
+
+using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Sockets;
 
-using Server;
 
-using Packets.General;
-using System.Text.Unicode;
-using System.Text;
-using Packets.Auth;
-using Packets.Channel;
+using Packets.general;
+using Packets.auth;
+using Packets.channel;
+using Packets.user;
 
 namespace Packets
 {
     public static class PacketReceiver
     {
-        public const int SHUTDOWN = 1;
-
         private static readonly Dictionary<int, PacketHandler> handlers = new Dictionary<int, PacketHandler>()
         {
             { IdentifyPacket.TYPE, new IdentifyPacketHandler() },
             { LoginAttemptPacket.TYPE, new LoginAttemptPacketHandler() },
             { FetchChannelsRequestPacket.TYPE, new FetchChannelsRequestPacketHandler() },
             { ConfirmSessionRequestPacket.TYPE, new ConfirmSessionRequestPacketHandler() },
+            { FetchUserListRequestPacket.TYPE, new FetchUserListRequestPacketHandler() },
         };
 
         public static void Handle(byte[] packet, Socket clientSocket)

@@ -1,5 +1,5 @@
 ﻿using Packets;
-using Packets.General;
+using Packets.general;
 using System;
 using System.Collections.Generic;
 using System.Net;

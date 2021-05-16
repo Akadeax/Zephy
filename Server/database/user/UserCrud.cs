@@ -13,5 +13,38 @@ namespace Server.Database.User
         public const string COLLECTION_NAME = "users";
 
         public UserCrud() : base(COLLECTION_NAME) { }
+
+        public BaseUser ReadOneBase(Expression<Func<User, bool>> filter = null)
+        {
+            return ReadOne(filter).ToBaseUser();
+        }
+
+        public List<BaseUser> ReadManyBase(Expression<Func<User, bool>> filter = null)
+        {
+            if (filter == null) filter = x => true;
+
+            List <BaseUser> baseList = new List<BaseUser>();
+            foreach(User u in ReadMany(filter))
+            {
+                baseList.Add(u.ToBaseUser());
+            }
+            return baseList;
+        }
+
+        public List<ListedUser> ReadManyListed(Expression<Func<User, bool>> filter = null)
+        {
+            if (filter == null) filter = x => true;
+
+            List<ListedUser> listed = new List<ListedUser>();
+            foreach(User u in ReadMany(filter))
+            {
+                OnlineStatus status = ActiveUsers.IsLoggedIn(u._id) ?
+                    OnlineStatus.Online :
+                    OnlineStatus.Offline;
+                listed.Add(new ListedUser(u, status));
+            }
+
+            return listed;
+        }
     }
 }
