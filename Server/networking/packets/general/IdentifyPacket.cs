@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace Packets.General
+namespace Packets.general
 {
     public class IdentifyPacketData : PacketData
     {

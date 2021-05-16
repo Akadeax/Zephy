@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace Packets.Auth
+namespace Packets.auth
 {
     public class ConfirmSessionRequestPacketData : PacketData
     {

@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace Packets.Message
+namespace Packets.message
 {
     public class PopulateMessagesRequestPacketData : PacketData
     {
