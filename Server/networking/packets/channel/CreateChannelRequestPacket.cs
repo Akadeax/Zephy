@@ -1,8 +1,11 @@
 ﻿using Server;
+using Server.Database.Channel;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Linq;
+using Server.Util;
 
 namespace Packets.channel
 {
@@ -20,12 +23,55 @@ namespace Packets.channel
 
     class CreateChannelRequestPacketHandler : PacketHandler<CreateChannelRequestPacket>
     {
+        readonly ChannelCrud channelCrud = new ChannelCrud();
+
         protected override void Handle(CreateChannelRequestPacket packet, Socket sender)
         {
             var data = packet.Data;
             if (data == null) return;
 
+            if(data.withMembers.Count <= 1 || Util.HasDuplicates(data.withMembers))
+            {
+                SendError(HttpStatusCode.BadRequest, sender);
+                return;
+            }
 
+            ActiveUser user = ActiveUsers.GetUser(sender);
+            if(user == null)
+            {
+                SendError(HttpStatusCode.Unauthorized, sender);
+                return;
+            }
+
+            if(channelCrud.Exists(data.withMembers))
+            {
+                SendError(HttpStatusCode.Conflict, sender);
+                return;
+            }
+
+
+            var newChannel = new Channel()
+            {
+                name = data.name,
+                members = data.withMembers,
+                messages = new List<string>(),
+            };
+
+            channelCrud.CreateOne(newChannel);
+            var successResponse = new CreateChannelResponsePacket(new CreateChannelResponsePacketData(
+                (int)HttpStatusCode.OK,
+                newChannel
+            ));
+            Zephy.serverSocket.SendPacket(successResponse, sender);
+        }
+
+        private void SendError(HttpStatusCode code, Socket sender)
+        {
+            var errResponse = new CreateChannelResponsePacket(new CreateChannelResponsePacketData(
+                (int)code,
+                null
+            ));
+            Zephy.serverSocket.SendPacket(errResponse, sender);
         }
     }
 

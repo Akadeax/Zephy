@@ -9,7 +9,7 @@ namespace Server.Util
 {
     static class Util
     {
-        private static Random rand = new Random();
+        private static readonly Random rand = new Random();
 
         /// <summary>
         /// Joins Strings in list with ',' in between
@@ -62,6 +62,19 @@ namespace Server.Util
             T[] result = new T[length];
             Array.Copy(data, index, result, 0, length);
             return result;
+        }
+
+        public static bool HasDuplicates(List<string> list)
+        {
+            var hashset = new HashSet<string>();
+            foreach (var name in list)
+            {
+                if (!hashset.Add(name))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
