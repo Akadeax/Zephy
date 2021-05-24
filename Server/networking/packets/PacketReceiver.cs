@@ -21,6 +21,7 @@ namespace Packets
             { FetchChannelsRequestPacket.TYPE, new FetchChannelsRequestPacketHandler() },
             { ConfirmSessionRequestPacket.TYPE, new ConfirmSessionRequestPacketHandler() },
             { FetchUserListRequestPacket.TYPE, new FetchUserListRequestPacketHandler() },
+            { CreateChannelRequestPacket.TYPE, new CreateChannelRequestPacketHandler() },
         };
 
         public static void Handle(byte[] packet, Socket clientSocket)

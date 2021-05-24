@@ -17,8 +17,8 @@ namespace Server.Database.Channel
 
         public override void Seed(SeederEntriesAmount amount)
         {
-            if ((amount.messageSeederAmount < 1 || amount.userSeederAmount > MAX_SEED) ||
-                (amount.channelSeederAmount < 1 || amount.channelSeederAmount > MAX_SEED))
+            if ((amount.messageSeederAmount < 0 || amount.userSeederAmount > MAX_SEED) ||
+                (amount.channelSeederAmount < 0 || amount.channelSeederAmount > MAX_SEED))
                 throw new ArgumentException("out of bounds", "amount");
 
             if (messageCrud.DocumentCount > 0 || channelCrud.DocumentCount > 0) return;

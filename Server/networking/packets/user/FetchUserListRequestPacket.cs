@@ -37,9 +37,11 @@ namespace Packets.user
 
             User user = userCrud.ReadOneById(activeUser.userId);
 
+            // Fetch all users that match the search & aren't the requester
             List<ListedUser> users = userCrud.ReadManyListed(x =>
-                x.identifier.ToLower().Contains(data.search) ||
-                x.fullName.ToLower().Contains(data.search)
+                (x.identifier.ToLower().Contains(data.search)
+                || x.fullName.ToLower().Contains(data.search))
+                && x._id != user._id
             );
 
             var response = new FetchUserListResponsePacket(new FetchUserListResponsePacketData(

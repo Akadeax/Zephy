@@ -16,6 +16,19 @@ namespace Server.Database.Channel
 
         public ChannelCrud() : base(COLLECTION_NAME) { }
 
+        /// <summary>
+        /// Returns whether any channel that has the same elements as 'members' exists.
+        /// </summary>
+        public bool Exists(List<string> members)
+        {
+            List<Channel> channels = ReadMany();
+            foreach(var channel in channels)
+            {
+                if(new HashSet<string>(channel.members).SetEquals(members)) return true;
+            }
+            return false;
+        }
+
         public PopulatedChannel ReadOnePopulated(string id)
         {
             return ReadOnePopulated(x => x._id == id);
@@ -50,7 +63,12 @@ namespace Server.Database.Channel
             foreach (Channel channel in fetchedChannels)
             {
                 PopulatedChannel popChannel = channelCrud.ReadOnePopulated(x => x._id == channel._id);
-                baseChannels.Add(channel.ToBaseChannelData(popChannel.messages[0]));
+
+                baseChannels.Add(channel.ToBaseChannelData(
+                    popChannel?.messages.Count > 0
+                        ? popChannel?.messages[0]
+                        : null
+                ));
             }
 
             return baseChannels;
