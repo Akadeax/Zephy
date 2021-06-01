@@ -1,4 +1,6 @@
 ﻿using Server;
+using Server.Database.Message;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -8,12 +10,14 @@ namespace Packets.message
     public class PopulateMessagesResponsePacketData : PacketData
     {
         public int httpStatus;
-        public string user;
+        public int page;
+        public List<PopulatedMessage> fetchedMessages;
 
-        public PopulateMessagesResponsePacketData(int httpStatus, string user)
+        public PopulateMessagesResponsePacketData(int httpStatus, int page, List<PopulatedMessage> fetchedMessages)
         {
             this.httpStatus = httpStatus;
-            this.user = user;
+            this.page = page;
+            this.fetchedMessages = fetchedMessages;
         }
     }
 

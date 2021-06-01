@@ -4,11 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 
-
 using Packets.general;
 using Packets.auth;
 using Packets.channel;
 using Packets.user;
+using Packets.message;
 
 namespace Packets
 {
@@ -22,6 +22,7 @@ namespace Packets
             { ConfirmSessionRequestPacket.TYPE, new ConfirmSessionRequestPacketHandler() },
             { FetchUserListRequestPacket.TYPE, new FetchUserListRequestPacketHandler() },
             { CreateChannelRequestPacket.TYPE, new CreateChannelRequestPacketHandler() },
+            { PopulateMessagesRequestPacket.TYPE, new PopulateMessagesRequestPacketHandler() },
         };
 
         public static void Handle(byte[] packet, Socket clientSocket)
