@@ -10,11 +10,11 @@
         "projectUniqueName": "D:\\dev\\Programming\\CS\\VanillaCS\\Zephy\\Server\\Server.csproj",
         "projectName": "Server",
         "projectPath": "D:\\dev\\Programming\\CS\\VanillaCS\\Zephy\\Server\\Server.csproj",
-        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+        "packagesPath": "C:\\Users\\Focus\\.nuget\\packages\\",
         "outputPath": "D:\\dev\\Programming\\CS\\VanillaCS\\Zephy\\Server\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Focus\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

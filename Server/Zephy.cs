@@ -23,8 +23,8 @@ namespace Server
             SeederHandler.Seed(new SeederEntriesAmount
             {
                 userSeederAmount = 10,
-                channelSeederAmount = 5,
-                messageSeederAmount = 200,
+                channelSeederAmount = 0,
+                messageSeederAmount = 0,
             });
             #endregion
 

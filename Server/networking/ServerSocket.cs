@@ -88,9 +88,9 @@ namespace Server
             {
                 sendTo.Send(packet.Buffer);
             }
-            catch(Exception)
+            catch(Exception e)
             {
-                Zephy.Logger.Error("Fatal error: failed to send Packet");
+                Zephy.Logger.Error($"Fatal error, failed to send Packet: {e}");
             }
         }
     }

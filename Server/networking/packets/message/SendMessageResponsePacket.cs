@@ -1,4 +1,5 @@
 ﻿using Server;
+using Server.Database.Message;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -8,16 +9,12 @@ namespace Packets.message
     public class SendMessageResponsePacketData : PacketData
     {
         public int httpStatus;
-        public string forChannel;
-        public string content;
-        public string author;
+        public PopulatedMessage message;
 
-        public SendMessageResponsePacketData(int httpStatus, string forChannel, string content, string author)
+        public SendMessageResponsePacketData(int httpStatus, PopulatedMessage message)
         {
             this.httpStatus = httpStatus;
-            this.forChannel = forChannel;
-            this.content = content;
-            this.author = author;
+            this.message = message;
         }
     }
 

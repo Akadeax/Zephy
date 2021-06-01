@@ -23,6 +23,7 @@ namespace Packets
             { FetchUserListRequestPacket.TYPE, new FetchUserListRequestPacketHandler() },
             { CreateChannelRequestPacket.TYPE, new CreateChannelRequestPacketHandler() },
             { PopulateMessagesRequestPacket.TYPE, new PopulateMessagesRequestPacketHandler() },
+            { SendMessageRequestPacket.TYPE, new SendMessageRequestPacketHandler() },
         };
 
         public static void Handle(byte[] packet, Socket clientSocket)
