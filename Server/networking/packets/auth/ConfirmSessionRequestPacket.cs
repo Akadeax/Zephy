@@ -50,6 +50,7 @@ namespace Packets.auth
                 return;
             }
 
+            // Respond with confirmed session, client can instantly redirect
             var successResponse = new ConfirmSessionResponsePacket(new ConfirmSessionResponsePacketData(
                 (int)HttpStatusCode.OK,
                 user

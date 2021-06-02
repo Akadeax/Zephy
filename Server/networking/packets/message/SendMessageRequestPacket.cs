@@ -63,7 +63,7 @@ namespace Packets.message
             channel.messages.Add(newMessage._id);
             channelCrud.UpdateOne(channel._id, channel);
 
-            // send response to members
+            // send response to members of channel (only if success!)
             var responsePacket = new SendMessageResponsePacket(new SendMessageResponsePacketData(
                 (int)HttpStatusCode.OK, messageCrud.ReadOnePopulated(newMessage._id), channel._id
             ));

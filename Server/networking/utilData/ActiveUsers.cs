@@ -10,10 +10,6 @@ namespace Server
     {
         public static readonly List<ActiveUser> loggedInUsers = new List<ActiveUser>();
 
-        /// <summary>
-        /// Adds a user to the current list of active users
-        /// </summary>
-        /// <returns>success</returns>
         public static bool AddActiveUser(ActiveUser toAdd)
         {
             if (loggedInUsers.Any(x => x.userId == toAdd.userId)) return false;
@@ -44,6 +40,10 @@ namespace Server
             return loggedInUsers.FirstOrDefault(x => x.clientSocket == clientSocket);
         }
 
+        /// <returns>
+        /// Whether the given <c>userId</c> belongs to
+        /// any <c>ActiveUser</c> that is currently logged in.
+        /// </returns>
         public static bool IsLoggedIn(string userId)
         {
             if (userId == null) return false;
@@ -54,12 +54,19 @@ namespace Server
             return false;
         }
 
+        /// <returns>
+        /// Whether the given <c>userSocket</c> belongs to
+        /// any <c>ActiveUser</c> that is currently logged in.
+        /// </returns>
         public static bool IsLoggedIn(Socket userSocket)
         {
             return loggedInUsers.Any(x => x.clientSocket == userSocket);
         }
     }
 
+    /// <summary>
+    /// Contains all information needed on a logged in user.
+    /// </summary>
     public class ActiveUser
     {
         public string userId;

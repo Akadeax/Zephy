@@ -10,6 +10,11 @@ using System.Threading.Tasks;
 
 namespace Server
 {
+    /// <summary>
+    /// Basis for all UDP (!) communication between Server and clients.
+    /// Receives all UDP Broadcasts from clients and informs them of the
+    /// IP Address of the Zephy instance.
+    /// </summary>
     class BroadcastReceiver
     {
         readonly UdpClient client;
@@ -58,7 +63,7 @@ namespace Server
             Zephy.Logger.Information($"received IdentifyPacket from Client {receivedFrom.Address}.");
 
             // Send Packet with identifier "SERVER" back to client
-            // to indicate that it was the server that sent data back
+            // to indicate that it was the Zephy Server instance that sent data back
             IdentifyPacket sendPacket = new IdentifyPacket(new IdentifyPacketData("SERVER"));
 
             await client.Client.SendToAsync(sendPacket.Buffer, SocketFlags.None, receivedFrom);

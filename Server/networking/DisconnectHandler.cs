@@ -6,6 +6,10 @@ using System.Text;
 
 namespace Server
 {
+    /// <summary>
+    /// Provides functionality for logging out disconnected
+    /// users, and cleaning up any remnants of their connection.
+    /// </summary>
     public static class DisconnectHandler
     {
         public static void OnDisconnect(Socket socket)

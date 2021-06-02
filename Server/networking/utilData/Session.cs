@@ -20,7 +20,7 @@ namespace Server.Networking
             Zephy.Logger.Information($"Created new session for {userId}!");
             var newSession = new Session(
                 userId,
-                DateTime.UtcNow.AddDays(28)
+                DateTime.Now.AddDays(28)
             );
 
             sessions.Add(newSession);
@@ -42,7 +42,7 @@ namespace Server.Networking
         {
             if (session == null) return SessionState.Invalid;
 
-            if (DateTime.UtcNow >= session.expirationDate)
+            if (DateTime.Now >= session.expirationDate)
             {
                 sessions.Remove(session);
                 CreateSession(session.userId);
@@ -82,10 +82,10 @@ namespace Server.Networking
 
         private void GenerateToken()
         {
-            var allChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
+            const string ALL_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
             var random = new Random();
             var resultToken = new string(
-               Enumerable.Repeat(allChar, 16)
+               Enumerable.Repeat(ALL_CHAR, 16)
                .Select(token => token[random.Next(token.Length)]).ToArray());
 
             accessToken = resultToken.ToString();

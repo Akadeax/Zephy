@@ -8,6 +8,11 @@ using System.Text;
 namespace Server
 {
 
+    /// <summary>
+    /// Basis of TCP (!) Communication between Server and all clients.
+    /// Runs callback loop of 'wait for request, then respond' with
+    /// all connected sockets.
+    /// </summary>
     class ServerSocket
     {
         public readonly Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -69,7 +74,7 @@ namespace Server
             byte[] recBuf = new byte[received];
             Array.Copy(buffer, recBuf, received);
 
-            // 0 length buffer = graceful close
+            // = graceful close
             if (recBuf.Length == 0)
             {
                 DisconnectHandler.OnDisconnect(current);

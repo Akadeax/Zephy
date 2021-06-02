@@ -30,6 +30,7 @@ namespace Packets.channel
             var data = packet.Data;
             if (data == null) return;
 
+            // check whether request is valid
             if(data.withMembers.Count <= 1 || Util.HasDuplicates(data.withMembers))
             {
                 SendError(HttpStatusCode.BadRequest, sender);
@@ -49,15 +50,15 @@ namespace Packets.channel
                 return;
             }
 
-
+            // create actual channel
             var newChannel = new Channel()
             {
                 name = data.name,
                 members = data.withMembers,
                 messages = new List<string>(),
             };
-
             channelCrud.CreateOne(newChannel);
+
             var successResponse = new CreateChannelResponsePacket(new CreateChannelResponsePacketData(
                 (int)HttpStatusCode.OK,
                 newChannel

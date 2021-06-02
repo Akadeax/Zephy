@@ -6,13 +6,16 @@ using Newtonsoft.Json;
 
 namespace Packets
 {
-    /* Top class makes it usable in contexts like 'List<PacketHandler>' without
-       having to provide a generic type, which is needed in e.g. PacketReceiver.cs */
+    // Base class  without generic makes it usable in contexts like 'List<PacketHandler>' without
+    // having to provide a generic type, which is needed in e.g. PacketReceiver.cs
     public abstract class PacketHandler
     {
         public abstract void Handle(byte[] buffer, Socket sender);
     }
 
+    /// <summary>
+    /// Responds to a given packet with <c>Handle</c>
+    /// </summary>
     public abstract class PacketHandler<TPacketType> : PacketHandler where TPacketType : Packet
     {
         protected abstract void Handle(TPacketType packet, Socket sender);
@@ -29,6 +32,10 @@ namespace Packets
 
     public abstract class PacketData { }
 
+    /// <summary>
+    /// Base class for packets, which make up all information interchange
+    /// between client and server through TCP.
+    /// </summary>
     public class Packet
     {
         protected const byte BASE_PACKET_SIZE = 4;
@@ -49,7 +56,9 @@ namespace Packets
             buffer = packet;
         }
 
-
+        /// <summary>
+        /// unique identifier of a packet.
+        /// </summary>
         public ushort PacketType
         {
             get
@@ -58,6 +67,9 @@ namespace Packets
             }
         }
 
+        /// <summary>
+        /// the length of the packet in bytes.
+        /// </summary>
         public ushort PacketLength
         {
             get
@@ -66,6 +78,7 @@ namespace Packets
             }
         }
 
+        #region writing & reading datatypes to/from buffer
         public static ushort GetPacketType(byte[] buffer)
         {
             return new Packet(buffer).PacketType;
@@ -127,5 +140,6 @@ namespace Packets
             }
             WriteString(json, BASE_PACKET_SIZE);
         }
+        #endregion
     }
 }

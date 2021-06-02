@@ -14,6 +14,7 @@ namespace Packets
 {
     public static class PacketReceiver
     {
+        // Associate received packet type with given handler
         private static readonly Dictionary<int, PacketHandler> handlers = new Dictionary<int, PacketHandler>()
         {
             { IdentifyPacket.TYPE, new IdentifyPacketHandler() },
@@ -26,6 +27,9 @@ namespace Packets
             { SendMessageRequestPacket.TYPE, new SendMessageRequestPacketHandler() },
         };
 
+        /// <summary>
+        /// Hand the received buffer to the appropriate handler based on PacketType
+        /// </summary>
         public static void Handle(byte[] packet, Socket clientSocket)
         {
             ushort packetType = BitConverter.ToUInt16(packet, 0);

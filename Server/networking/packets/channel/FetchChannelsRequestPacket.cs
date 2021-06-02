@@ -27,6 +27,7 @@ namespace Packets.channel
             var data = packet.Data;
             if (data == null) return;
 
+            // check whether request is valid
             ActiveUser activeUser = ActiveUsers.GetUser(sender);
             if (activeUser == null)
             {
@@ -36,6 +37,7 @@ namespace Packets.channel
 
             User user = userCrud.ReadOneById(activeUser.userId);
 
+            // fetch channels that match search
             List<BaseChannelData> channels = channelCrud.ReadManyBase(x =>
                 x.members.Contains(user._id) &&
                 x.name.ToLower().Contains(data.search.ToLower())

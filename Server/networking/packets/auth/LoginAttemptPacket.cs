@@ -28,7 +28,7 @@ namespace Packets.auth
             var data = packet.Data;
             if (data == null) return;
 
-            // TODO: REMOVE
+            // TODO: REMOVE, DEBUG LOGIN
             #region DEBUG
             if(data.identifier == "test")
             {
@@ -44,7 +44,7 @@ namespace Packets.auth
 
                 return;
             }
-
+            // check whether the request is valid
             User user = userCrud.ReadOne(x => x.identifier == data.identifier);
             if(user == null || user.password != data.password)
             {
@@ -52,6 +52,7 @@ namespace Packets.auth
                 return;
             }
 
+            // add user to list of logged in users
             bool addSuccess = ActiveUsers.AddActiveUser(new ActiveUser(user._id, sender));
             if(!addSuccess)
             {
@@ -59,6 +60,7 @@ namespace Packets.auth
                 return;
             }
 
+            // fetch the logging in user's session, or create new one if not exists
             Session session;
             if(Sessions.GetStateById(user._id) == SessionState.Invalid)
             {
@@ -69,6 +71,7 @@ namespace Packets.auth
                 session = Sessions.GetSessionById(user._id);
             }
 
+            // respond
             var successResponse = new LoginResponsePacket(new LoginResponsePacketData(
                 (int)HttpStatusCode.OK, user, session.accessToken
             ));

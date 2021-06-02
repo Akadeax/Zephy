@@ -7,6 +7,9 @@ using System.Text;
 
 namespace Server.Database
 {
+    /// <summary>
+    /// base class for all MongoDB interaction in the app.
+    /// </summary>
     public abstract class MongoCrud<T>
     {
         protected const string DATABASE = "Zephy";

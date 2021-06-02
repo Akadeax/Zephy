@@ -32,6 +32,7 @@ namespace Packets.message
             var data = packet.Data;
             if (data == null) return;
 
+            // check whether request is valid
             var channel = channelCrud.ReadOneById(data.forChannel);
             if(channel == null)
             {
@@ -39,7 +40,9 @@ namespace Packets.message
                 return;
             }
 
+            // fetch messages that match page and channel
             List<PopulatedMessage> paginatedMessages = messageCrud.ReadManyPaginated(channel._id, data.page, PAGE_SIZE);
+
             var response = new PopulateMessagesResponsePacket(new PopulateMessagesResponsePacketData(
                 (int)HttpStatusCode.OK, data.page, paginatedMessages
             ));
