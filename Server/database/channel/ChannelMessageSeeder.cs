@@ -63,7 +63,6 @@ namespace Server.Database.Channel
                         _id = ObjectId.GenerateNewId().ToString(),
                         content = rnd.Next(1, 10) < 8 ? Faker.Lorem.Sentence(20) : "ok",
                         author = author,
-                        channel = newChannel._id,
                         sentAt = rndTimestamp,
                     };
 

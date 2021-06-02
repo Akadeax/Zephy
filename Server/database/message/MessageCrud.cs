@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using Server.Database.Channel;
 using Server.Database.User;
 using System;
 using System.Collections.Generic;
@@ -30,11 +31,14 @@ namespace Server.Database.Message
             return ReadOnePopulated(x => x._id == id);
         }
 
-        public List<PopulatedMessage> ReadManyPaginated(string channel, int page, int pageSize)
+        public List<PopulatedMessage> ReadManyPaginated(string channelId, int page, int pageSize)
         {
+            var channelCrud = new ChannelCrud();
+            Channel.Channel channel = channelCrud.ReadOneById(channelId);
+
             return collection
                 .Aggregate()
-                .Match(x => x.channel == channel)
+                .Match(x => channel.messages.Contains(x._id))
                 .SortByDescending(x => x.sentAt)
                 .Lookup(UserCrud.COLLECTION_NAME, "author", "_id", "author")
                 .Unwind("author")
