@@ -38,13 +38,13 @@ namespace Server.Database.Message
 
             return collection
                 .Aggregate()
-                .Match(x => channel.messages.Contains(x._id))
                 .SortByDescending(x => x.sentAt)
+                .Match(x => channel.messages.Contains(x._id))
                 .Lookup(UserCrud.COLLECTION_NAME, "author", "_id", "author")
                 .Unwind("author")
-                .As<PopulatedMessage>()
                 .Skip(page * pageSize)
                 .Limit(pageSize)
+                .As<PopulatedMessage>()
                 .ToList();
 
         }

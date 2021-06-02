@@ -5,16 +5,19 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Linq;
 
 namespace Packets.user
 {
     public class FetchUserListRequestPacketData : PacketData
     {
         public string search;
+        public List<string> optionalExcludeIds;
 
-        public FetchUserListRequestPacketData(string search)
+        public FetchUserListRequestPacketData(string search, List<string> optionalExcludeIds)
         {
             this.search = search;
+            this.optionalExcludeIds = optionalExcludeIds;
         }
     }
 
@@ -43,6 +46,12 @@ namespace Packets.user
                 || x.fullName.ToLower().Contains(data.search))
                 && x._id != user._id
             );
+
+            // remove excludes
+            if(data.optionalExcludeIds != null)
+            {
+                users.RemoveAll(x => data.optionalExcludeIds.Contains(x._id));
+            }
 
             var response = new FetchUserListResponsePacket(new FetchUserListResponsePacketData(
                 (int)HttpStatusCode.OK,
