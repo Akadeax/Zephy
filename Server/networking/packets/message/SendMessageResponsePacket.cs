@@ -10,11 +10,13 @@ namespace Packets.message
     {
         public int httpStatus;
         public PopulatedMessage message;
+        public string channel;
 
-        public SendMessageResponsePacketData(int httpStatus, PopulatedMessage message)
+        public SendMessageResponsePacketData(int httpStatus, PopulatedMessage message, string channel)
         {
             this.httpStatus = httpStatus;
             this.message = message;
+            this.channel = channel;
         }
     }
 

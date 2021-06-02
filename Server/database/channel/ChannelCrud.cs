@@ -62,7 +62,7 @@ namespace Server.Database.Channel
             var baseChannels = new List<BaseChannelData>();
             foreach (Channel channel in fetchedChannels)
             {
-                PopulatedChannel popChannel = channelCrud.ReadOnePopulated(x => x._id == channel._id);
+                PopulatedChannel popChannel = channelCrud.ReadOnePopulated(channel._id);
 
                 baseChannels.Add(channel.ToBaseChannelData(
                     popChannel?.messages.Count > 0

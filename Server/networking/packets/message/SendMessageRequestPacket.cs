@@ -57,7 +57,6 @@ namespace Packets.message
                 content = data.content,
                 sentAt = Util.ToUnixTimestamp(DateTime.Now),
                 author = senderUser.userId,
-                channel = channel._id,
             };
             messageCrud.CreateOne(newMessage);
 
@@ -66,7 +65,7 @@ namespace Packets.message
 
             // send response to members
             var responsePacket = new SendMessageResponsePacket(new SendMessageResponsePacketData(
-                (int)HttpStatusCode.OK, messageCrud.ReadOnePopulated(newMessage._id)
+                (int)HttpStatusCode.OK, messageCrud.ReadOnePopulated(newMessage._id), channel._id
             ));
 
             foreach(string memberId in channel.members)
@@ -81,7 +80,7 @@ namespace Packets.message
         void SendError(HttpStatusCode code, Socket sender)
         {
             var err = new SendMessageResponsePacket(new SendMessageResponsePacketData(
-                (int)code, null
+                (int)code, null, null
             ));
             Zephy.serverSocket.SendPacket(err, sender);
         }
