@@ -57,18 +57,13 @@ namespace Server.Database.Channel
 
             List<Channel> fetchedChannels = ReadMany(filter);
 
-            ChannelCrud channelCrud = new ChannelCrud();
+            MessageCrud messageCrud = new MessageCrud();
 
             var baseChannels = new List<BaseChannelData>();
             foreach (Channel channel in fetchedChannels)
             {
-                PopulatedChannel popChannel = channelCrud.ReadOnePopulated(channel._id);
-
-                baseChannels.Add(channel.ToBaseChannelData(
-                    popChannel?.messages.Count > 0
-                        ? popChannel?.messages[0]
-                        : null
-                ));
+                Message.Message lastMessage = messageCrud.ReadLatest(channel._id);
+                baseChannels.Add(channel.ToBaseChannelData(lastMessage));
             }
 
             return baseChannels;

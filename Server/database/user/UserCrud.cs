@@ -31,12 +31,20 @@ namespace Server.Database.User
             return baseList;
         }
 
-        public List<ListedUser> ReadManyListed(Expression<Func<User, bool>> filter = null)
+        public List<ListedUser> ReadManyListedPaginated(int page, int pageSize, Expression<Func<User, bool>> filter = null)
         {
             if (filter == null) filter = x => true;
 
+            List<User> paginatedUsers = collection
+                .Aggregate()
+                .Match(filter)
+                .Skip((page - 1) * pageSize)
+                .Limit(pageSize)
+                .As<User>()
+                .ToList();
+
             List<ListedUser> listed = new List<ListedUser>();
-            foreach(User u in ReadMany(filter))
+            foreach(User u in paginatedUsers)
             {
                 OnlineStatus status = ActiveUsers.IsLoggedIn(u._id) ?
                     OnlineStatus.Online :

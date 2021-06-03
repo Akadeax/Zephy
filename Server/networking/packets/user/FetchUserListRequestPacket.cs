@@ -12,17 +12,20 @@ namespace Packets.user
     public class FetchUserListRequestPacketData : PacketData
     {
         public string search;
+        public int page;
         public List<string> optionalExcludeIds;
 
-        public FetchUserListRequestPacketData(string search, List<string> optionalExcludeIds)
+        public FetchUserListRequestPacketData(string search, int page, List<string> optionalExcludeIds)
         {
             this.search = search;
+            this.page = page;
             this.optionalExcludeIds = optionalExcludeIds;
         }
     }
 
     class FetchUserListRequestPacketHandler : PacketHandler<FetchUserListRequestPacket>
     {
+        const int PAGE_SIZE = 20;
         readonly UserCrud userCrud = new UserCrud();
 
         protected override void Handle(FetchUserListRequestPacket packet, Socket sender)
@@ -41,11 +44,15 @@ namespace Packets.user
             User user = userCrud.ReadOneById(activeUser.userId);
 
             // Fetch all users that match the search & aren't the requester
-            List<ListedUser> users = userCrud.ReadManyListed(x =>
+            List<ListedUser> users = userCrud.ReadManyListedPaginated(
+                data.page, PAGE_SIZE,
+                x =>
                 (x.identifier.ToLower().Contains(data.search)
                 || x.fullName.ToLower().Contains(data.search))
                 && x._id != user._id
             );
+
+
 
             // remove excludes
             if(data.optionalExcludeIds != null)
@@ -55,6 +62,7 @@ namespace Packets.user
 
             var response = new FetchUserListResponsePacket(new FetchUserListResponsePacketData(
                 (int)HttpStatusCode.OK,
+                data.page,
                 users
             ));
             Zephy.serverSocket.SendPacket(response, sender);
@@ -64,6 +72,7 @@ namespace Packets.user
         {
             var errResponse = new FetchUserListResponsePacket(new FetchUserListResponsePacketData(
                 (int)code,
+                0,
                 null
             ));
             Zephy.serverSocket.SendPacket(errResponse, socket);

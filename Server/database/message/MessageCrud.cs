@@ -63,5 +63,14 @@ namespace Server.Database.Message
                 .As<PopulatedMessage>()
                 .ToList();
         }
+
+        public Message ReadLatest(string channelId)
+        {
+            return collection
+                .Aggregate()
+                .SortByDescending(x => x.sentAt)
+                .Match(x => x.channel == channelId)
+                .FirstOrDefault();
+        }
     }
 }

@@ -9,11 +9,13 @@ namespace Packets.user
     public class FetchUserListResponsePacketData : PacketData
     {
         public int httpStatus;
+        public int page;
         public List<ListedUser> users;
 
-        public FetchUserListResponsePacketData(int httpStatus, List<ListedUser> users)
+        public FetchUserListResponsePacketData(int httpStatus, int page, List<ListedUser> users)
         {
             this.httpStatus = httpStatus;
+            this.page = page;
             this.users = users;
         }
     }

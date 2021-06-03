@@ -22,9 +22,9 @@ namespace Server
             #region Seeding
             SeederHandler.Seed(new SeederEntriesAmount
             {
-                userSeederAmount = 2,
-                channelSeederAmount = 1,
-                messageSeederAmount = 5000000,
+                userSeederAmount = 1000,
+                channelSeederAmount = 1000,
+                messageSeederAmount = 5000,
             });
             #endregion
 

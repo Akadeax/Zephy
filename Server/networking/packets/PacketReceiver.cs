@@ -25,6 +25,7 @@ namespace Packets
             { CreateChannelRequestPacket.TYPE, new CreateChannelRequestPacketHandler() },
             { PopulateMessagesRequestPacket.TYPE, new PopulateMessagesRequestPacketHandler() },
             { SendMessageRequestPacket.TYPE, new SendMessageRequestPacketHandler() },
+            { FetchMembersRequestPacket.TYPE, new FetchMembersRequestPacketHandler() },
         };
 
         /// <summary>
