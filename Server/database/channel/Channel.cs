@@ -20,7 +20,6 @@ namespace Server.Database.Channel
 
     public class Channel : BaseChannel
     {
-        public List<string> messages;
         public List<string> members;
 
         public BaseChannelData ToBaseChannelData(Message.Message lastMessage)

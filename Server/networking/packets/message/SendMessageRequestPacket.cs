@@ -57,10 +57,10 @@ namespace Packets.message
                 content = data.content,
                 sentAt = Util.ToUnixTimestamp(DateTime.Now),
                 author = senderUser.userId,
+                channel = channel._id,
             };
             messageCrud.CreateOne(newMessage);
 
-            channel.messages.Add(newMessage._id);
             channelCrud.UpdateOne(channel._id, channel);
 
             // send response to members of channel (only if success!)

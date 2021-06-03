@@ -34,7 +34,6 @@ namespace Server.Database.Channel
                 {
                     _id = ObjectId.GenerateNewId().ToString(),
                     name = Faker.Internet.DomainWord(),
-                    messages = new List<string>(),
                     members = new List<string>(),
                 };
 
@@ -64,9 +63,9 @@ namespace Server.Database.Channel
                         content = rnd.Next(1, 10) < 8 ? Faker.Lorem.Sentence(20) : "ok",
                         author = author,
                         sentAt = rndTimestamp,
+                        channel = newChannel._id
                     };
 
-                    newChannel.messages.Add(msg._id);
                     messageCrud.CreateOne(msg);
                 }
 
