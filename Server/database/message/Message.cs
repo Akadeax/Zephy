@@ -10,6 +10,7 @@ namespace Server.Database.Message
         public string _id;
         public string content;
         public int sentAt;
+        public string channel;
     }
 
     public class Message : MessageBase

@@ -33,13 +33,10 @@ namespace Server.Database.Message
 
         public List<PopulatedMessage> ReadManyPaginated(string channelId, int page, int pageSize)
         {
-            var channelCrud = new ChannelCrud();
-            Channel.Channel channel = channelCrud.ReadOneById(channelId);
-
             return collection
                 .Aggregate()
                 .SortByDescending(x => x.sentAt)
-                .Match(x => channel.messages.Contains(x._id))
+                .Match(x => x.channel == channelId)
                 .Lookup(UserCrud.COLLECTION_NAME, "author", "_id", "author")
                 .Unwind("author")
                 .Skip(page * pageSize)

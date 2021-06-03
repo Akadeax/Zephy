@@ -55,8 +55,8 @@ namespace Packets.channel
             {
                 name = data.name,
                 members = data.withMembers,
-                messages = new List<string>(),
             };
+
             channelCrud.CreateOne(newChannel);
 
             var successResponse = new CreateChannelResponsePacket(new CreateChannelResponsePacketData(
