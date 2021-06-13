@@ -1,0 +1,11 @@
+version: "3.9"
+services: 
+    mongo:
+        image: mongo:latest
+        container_name: "mongo"
+    udp:
+        container_name: "zephy"
+        build: "./Server/"
+        ports:
+           - 6556:6556/udp
+           - 6557:6557/tcp

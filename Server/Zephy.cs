@@ -12,10 +12,8 @@ namespace Server
                 .WriteTo.Console()
                 .CreateLogger();
 
-        public static readonly BroadcastReceiver broadcastReceiver = new BroadcastReceiver(PORT, PORT + 1);
+        public static readonly BroadcastReceiver broadcastReceiver = new BroadcastReceiver();
         public static readonly ServerSocket serverSocket = new ServerSocket();
-
-        public const int PORT = 6556;
 
         static void Main()
         {
@@ -33,7 +31,7 @@ namespace Server
             broadcastReceiver.StartReceive();
 
             // Start TCP Server
-            serverSocket.Start(PORT);
+            serverSocket.Start();
 
             Logger.Information("Listening to new connections...");
 

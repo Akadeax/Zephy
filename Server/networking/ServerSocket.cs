@@ -15,15 +15,14 @@ namespace Server
     /// </summary>
     class ServerSocket
     {
+        private const int TCP_PORT = 6557;
+
         public readonly Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         const int BUFFER_SIZE = 4096;
         private readonly byte[] buffer = new byte[BUFFER_SIZE];
-        int port;
 
-        public void Start(int port)
+        public void Start()
         {
-            this.port = port;
-
             Console.Title = "Server";
             SetupServer();
         }
@@ -32,7 +31,7 @@ namespace Server
         private void SetupServer()
         {
             Zephy.Logger.Information("Setting up TCP Listener...");
-            serverSocket.Bind(new IPEndPoint(IPAddress.Any, port));
+            serverSocket.Bind(new IPEndPoint(IPAddress.Any, TCP_PORT));
             serverSocket.Listen(0);
             serverSocket.BeginAccept(AcceptCallback, null);
             Zephy.Logger.Information("Successfully set up TCP Listener.");

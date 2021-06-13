@@ -17,15 +17,16 @@ namespace Server
     /// </summary>
     class BroadcastReceiver
     {
+        private const int UDP_PORT = 6556;
+
         readonly UdpClient client;
-        readonly int clientListenPort;
 
-        public BroadcastReceiver(int port, int clientListenPort)
+        public BroadcastReceiver()
         {
-            client = new UdpClient();
-            client.Client.Bind(new IPEndPoint(IPAddress.Any, port));
-
-            this.clientListenPort = clientListenPort;
+            client = new UdpClient(new IPEndPoint(IPAddress.Any, UDP_PORT))
+            {
+                EnableBroadcast = true
+            };
         }
 
         ~BroadcastReceiver()
@@ -58,15 +59,13 @@ namespace Server
             IdentifyPacket recvPacket = new IdentifyPacket(receivedResult.Buffer);
             if (recvPacket.Data.src != "CLIENT") return;
 
-
-            IPEndPoint receivedFrom = new IPEndPoint(receivedResult.RemoteEndPoint.Address, clientListenPort);
-            Zephy.Logger.Information($"received IdentifyPacket from Client {receivedFrom.Address}.");
+            Zephy.Logger.Information($"received IdentifyPacket from Client {receivedResult.RemoteEndPoint.Address}.");
 
             // Send Packet with identifier "SERVER" back to client
-            // to indicate that it was the Zephy Server instance that sent data back
+            // to indicate that it was Server instance that sent data back
             IdentifyPacket sendPacket = new IdentifyPacket(new IdentifyPacketData("SERVER"));
 
-            await client.Client.SendToAsync(sendPacket.Buffer, SocketFlags.None, receivedFrom);
+            await client.Client.SendToAsync(sendPacket.Buffer, SocketFlags.None, receivedResult.RemoteEndPoint);
             Zephy.Logger.Information($"sending IdentifyPacket from Server back to sender.");
         }
     }

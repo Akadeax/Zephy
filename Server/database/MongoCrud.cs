@@ -19,7 +19,7 @@ namespace Server.Database
 
         public MongoCrud(string table)
         {
-            var client = new MongoClient();
+            var client = new MongoClient("mongodb://mongo");
             db = client.GetDatabase(DATABASE);
             collection = db.GetCollection<T>(table);
         }
