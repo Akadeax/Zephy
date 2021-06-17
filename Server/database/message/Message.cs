@@ -20,6 +20,6 @@ namespace Server.Database.Message
 
     public class PopulatedMessage : MessageBase
     {
-        public User.User author;
+        public BaseUser author;
     }
 }

@@ -35,16 +35,21 @@ namespace Server.Database.User
         {
             if (filter == null) filter = x => true;
 
-            List<User> paginatedUsers = collection
+            List<BaseUser> paginatedUsers = collection
                 .Aggregate()
                 .Match(filter)
                 .Skip((page - 1) * pageSize)
                 .Limit(pageSize)
-                .As<User>()
+                .As<BaseUser>()
                 .ToList();
 
+            return ToListed(paginatedUsers);
+        }
+
+        public List<ListedUser> ToListed(List<BaseUser> users)
+        {
             List<ListedUser> listed = new List<ListedUser>();
-            foreach(User u in paginatedUsers)
+            foreach (BaseUser u in users)
             {
                 OnlineStatus status = ActiveUsers.IsLoggedIn(u._id) ?
                     OnlineStatus.Online :

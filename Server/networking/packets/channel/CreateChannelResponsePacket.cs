@@ -9,9 +9,9 @@ namespace Packets.channel
     public class CreateChannelResponsePacketData : PacketData
     {
         public int httpStatus;
-        public Server.Database.Channel.Channel newChannel;
+        public Channel newChannel;
 
-        public CreateChannelResponsePacketData(int httpStatus, Server.Database.Channel.Channel newChannel)
+        public CreateChannelResponsePacketData(int httpStatus, Channel newChannel)
         {
             this.httpStatus = httpStatus;
             this.newChannel = newChannel;

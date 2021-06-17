@@ -12,9 +12,9 @@ namespace Packets.channel
     {
         public int httpStatus;
         public string channel;
-        public List<User> members;
+        public List<ListedUser> members;
 
-        public FetchMembersResponsePacketData(int httpStatus, string channel, List<User> members)
+        public FetchMembersResponsePacketData(int httpStatus, string channel, List<ListedUser> members)
         {
             this.httpStatus = httpStatus;
             this.channel = channel;

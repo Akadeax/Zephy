@@ -8,6 +8,7 @@ namespace Server.Database.User
         Offline, Online
     }
 
+    [BsonIgnoreExtraElements]
     public class BaseUser
     {
         [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]

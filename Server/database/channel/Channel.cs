@@ -36,6 +36,6 @@ namespace Server.Database.Channel
     public class PopulatedChannel : BaseChannelData
     {
         public List<Message.Message> messages;
-        public List<User.User> members;
+        public List<BaseUser> members;
     }
 }

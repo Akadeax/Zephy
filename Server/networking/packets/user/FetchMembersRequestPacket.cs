@@ -21,6 +21,7 @@ namespace Packets.channel
     class FetchMembersRequestPacketHandler : PacketHandler<FetchMembersRequestPacket>
     {
         readonly ChannelCrud channelCrud = new ChannelCrud();
+        readonly UserCrud userCrud = new UserCrud();
 
         protected override void Handle(FetchMembersRequestPacket packet, Socket sender)
         {
@@ -33,9 +34,11 @@ namespace Packets.channel
                 SendError(HttpStatusCode.BadRequest, sender);
                 return;
             }
+
+            List<ListedUser> listedUsers = userCrud.ToListed(channel.members);
             
             var response = new FetchMembersResponsePacket(new FetchMembersResponsePacketData(
-                (int)HttpStatusCode.OK, data.channel, channel.members
+                (int)HttpStatusCode.OK, data.channel, listedUsers
             ));
             Zephy.serverSocket.SendPacket(response, sender);
         }
