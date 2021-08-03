@@ -25,7 +25,7 @@ namespace Server
         public static bool RemoveUser(Socket socket)
         {
             ActiveUser user = loggedInUsers.First(x => x.clientSocket == socket);
-            if (user == null) return false;
+            if (user == null || loggedInUsers.Count == 0) return false;
             loggedInUsers.Remove(user);
             return true;
         }

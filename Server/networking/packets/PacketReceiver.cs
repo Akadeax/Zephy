@@ -26,17 +26,35 @@ namespace Packets
             { PopulateMessagesRequestPacket.TYPE, new PopulateMessagesRequestPacketHandler() },
             { SendMessageRequestPacket.TYPE, new SendMessageRequestPacketHandler() },
             { FetchMembersRequestPacket.TYPE, new FetchMembersRequestPacketHandler() },
+            { ModifyMembersRequestPacket.TYPE, new ModifyMembersRequestPacketHandler() },
+            { ModifyChannelRequestPacket.TYPE, new ModifyChannelRequestPacketHandler() },
         };
 
         /// <summary>
         /// Hand the received buffer to the appropriate handler based on PacketType
         /// </summary>
-        public static void Handle(byte[] packet, Socket clientSocket)
+        public static void HandlePacket(byte[] recv, Socket clientSocket)
         {
-            ushort packetType = BitConverter.ToUInt16(packet, 0);
-            Zephy.Logger.Information($"Received packet, Length: {packet.Length} | Type: {packetType}");
+            int currLen = Packet.GetPacketLength(recv);
 
-            if(handlers.ContainsKey(packetType))
+            byte[] curr = new byte[currLen];
+            Array.Copy(recv, curr, currLen);
+            CallHandler(curr, clientSocket);
+
+            if(recv.Length > currLen)
+            {
+                byte[] next = new byte[recv.Length - currLen];
+                Array.Copy(recv, currLen, next, 0, recv.Length - currLen);
+                HandlePacket(next, clientSocket);
+            }
+        }
+
+        private static void CallHandler(byte[] packet, Socket clientSocket)
+        {
+            ushort packetType = Packet.GetPacketType(packet);
+
+            Zephy.Logger.Information($"Received packet, Length: {packet.Length} | Type: {packetType}");
+            if (handlers.ContainsKey(packetType))
             {
                 handlers[packetType].Handle(packet, clientSocket);
             }

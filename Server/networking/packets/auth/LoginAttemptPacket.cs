@@ -1,6 +1,7 @@
 ﻿using Server;
 using Server.Database.User;
 using Server.Networking;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -30,9 +31,10 @@ namespace Packets.auth
 
             // TODO: REMOVE, DEBUG LOGIN
             #region DEBUG
-            if(data.identifier == "test")
+            if(data.identifier.StartsWith("test") && data.identifier.Length == 5)
             {
-                User dbgUser = userCrud.ReadOne();
+                int num = int.Parse(data.identifier[4].ToString());
+                User dbgUser = userCrud.ReadMany().ToList()[num];
                 data.identifier = dbgUser.identifier;
                 data.password = dbgUser.password;
             }

@@ -14,6 +14,11 @@ namespace Server.Database.User
 
         public UserCrud() : base(COLLECTION_NAME) { }
 
+        public BaseUser ReadOneBaseById(string id)
+        {
+            return ReadOne(x => x._id == id).ToBaseUser();
+        }
+
         public BaseUser ReadOneBase(Expression<Func<User, bool>> filter = null)
         {
             return ReadOne(filter).ToBaseUser();
@@ -58,6 +63,16 @@ namespace Server.Database.User
             }
 
             return listed;
+        }
+
+        public ListedUser ReadOneListedById(string id)
+        {
+            BaseUser baseUser = ReadOneBaseById(id);
+            OnlineStatus status = ActiveUsers.IsLoggedIn(baseUser._id) ?
+                    OnlineStatus.Online :
+                    OnlineStatus.Offline;
+
+            return new ListedUser(baseUser, status);
         }
     }
 }

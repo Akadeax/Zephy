@@ -80,7 +80,7 @@ namespace Server
                 return;
             }
 
-            PacketReceiver.Handle(recBuf, current);
+            PacketReceiver.HandlePacket(recBuf, current);
 
             current.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, current);
         }

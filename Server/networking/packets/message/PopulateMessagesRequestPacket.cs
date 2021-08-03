@@ -4,6 +4,7 @@ using Server.Database.Message;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 
 namespace Packets.message
@@ -30,8 +31,10 @@ namespace Packets.message
         protected override void Handle(PopulateMessagesRequestPacket packet, Socket sender)
         {
             var data = packet.Data;
+            System.Console.WriteLine(1);
+            System.Console.WriteLine(Encoding.UTF8.GetString(packet.Buffer));
             if (data == null) return;
-
+            System.Console.WriteLine(2);
             // check whether request is valid
             var channel = channelCrud.ReadOneById(data.forChannel);
             if(channel == null)
@@ -46,6 +49,7 @@ namespace Packets.message
             var response = new PopulateMessagesResponsePacket(new PopulateMessagesResponsePacketData(
                 (int)HttpStatusCode.OK, data.page, paginatedMessages
             ));
+            System.Console.WriteLine("SENDIN");
             Zephy.serverSocket.SendPacket(response, sender);
         }
 
